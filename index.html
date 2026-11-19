@@ -2362,6 +2362,15 @@ function toggleTheme(){
 try{var th=localStorage.getItem('rb-theme');if(th){document.documentElement.setAttribute('data-theme',th);document.querySelector('.theme-toggle').textContent=th==='light'?'☀️':'🌙'}}catch(e){}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')toggleMenu(false)});
 window.addEventListener('hashchange',function(){showTab(location.hash.slice(1),true)});
+function labelTables(){
+  document.querySelectorAll('.tbl-wrap table').forEach(function(t){
+    var heads=[].map.call(t.querySelectorAll('thead th'),function(x){return x.textContent.trim()});
+    t.querySelectorAll('tbody tr').forEach(function(r){
+      [].forEach.call(r.children,function(td,i){td.setAttribute('data-label',heads[i]||'')});
+    });
+  });
+}
+labelTables();
 buildPagers();
 showTab((location.hash||'#fundamentos').slice(1),true);
 </script>
