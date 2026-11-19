@@ -358,6 +358,14 @@ ol.ladder li.pend .lad-tag{color:var(--fg3);background:var(--bg3)}
   .rating-scale{gap:6px}
   .tags{gap:6px}
 }
+
+@media(max-width:700px){
+  .short-first .tbl-wrap td:first-child::before{display:inline;font-size:inherit;text-transform:none;letter-spacing:0;color:inherit;font-weight:700}
+  .short-first td:first-child::before{display:inline;font-size:inherit;text-transform:none;letter-spacing:0;color:inherit;font-weight:700;content:attr(data-label) " "}
+}
+@media(max-width:900px){.theme-toggle{display:none}}
+.menu-theme{margin:4px 12px 14px;background:var(--bg3);border:1px solid var(--border2);color:var(--fg);border-radius:10px;padding:10px 14px;font:600 .9rem 'DM Sans',sans-serif;cursor:pointer;width:calc(100% - 24px);text-align:left}
+@media(min-width:901px){.menu-theme{display:none}}
 </style>
 
 </head>
@@ -2479,6 +2487,7 @@ function paintDone(){
 function initMenuExtras(){
   var m=document.getElementById('menu'),pr=document.createElement('div'); pr.className='progress'; pr.id='prog'; pr.innerHTML='<span></span><div class="bar"><i></i></div>';
   var head=m.querySelector('.menu-head'); head.insertAdjacentElement('afterend',pr);
+  var tb=document.createElement('button'); tb.className='menu-theme'; tb.textContent='🌓 Alternar tema claro/escuro'; tb.onclick=toggleTheme; pr.insertAdjacentElement('afterend',tb);
 }
 
 function buildPagers(){
@@ -2501,6 +2510,7 @@ window.addEventListener('hashchange',function(){showTab(location.hash.slice(1),t
 function labelTables(){
   document.querySelectorAll('.tbl-wrap table').forEach(function(t){
     var heads=[].map.call(t.querySelectorAll('thead th'),function(x){return x.textContent.trim()});
+    if(/^(Aula|#)$/.test(heads[0])) t.classList.add('short-first');
     t.querySelectorAll('tbody tr').forEach(function(r){
       [].forEach.call(r.children,function(td,i){td.setAttribute('data-label',heads[i]||'')});
     });
