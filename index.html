@@ -1,0 +1,2350 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<style>html{padding-top:env(safe-area-inset-top,0px)}body{margin:0;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Vivendo de Rating Bancário</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap">
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#151821;--bg3:#1c2130;--bg4:#232940;
+  --border:#2a3250;--border2:#374266;
+  --fg:#e8ecf5;--fg2:#9ba8c8;--fg3:#6474a0;
+  --accent:#22c55e;--accent-bg:rgba(34,197,94,.08);--accent-dim:#16a34a;
+  --warn:#f59e0b;--warn-bg:rgba(245,158,11,.08);
+  --danger:#ef4444;--danger-bg:rgba(239,68,68,.08);
+  --info:#3b82f6;--info-bg:rgba(59,130,246,.08);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,.08);
+  color-scheme:dark;
+}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){
+  --bg:#f5f7ff;--bg2:#fff;--bg3:#eef1fa;--bg4:#e3e8f5;
+  --border:#d1d8f0;--border2:#b8c3e8;
+  --fg:#111827;--fg2:#374151;--fg3:#6b7280;
+  --accent:#16a34a;--accent-bg:rgba(22,163,74,.08);--accent-dim:#15803d;
+  --warn:#d97706;--warn-bg:rgba(217,119,6,.08);
+  --danger:#dc2626;--danger-bg:rgba(220,38,38,.08);
+  --info:#2563eb;--info-bg:rgba(37,99,235,.08);
+  --purple:#7c3aed;--purple-bg:rgba(124,58,237,.08);
+  color-scheme:light;
+}}
+:root[data-theme=light]{
+  --bg:#f5f7ff;--bg2:#fff;--bg3:#eef1fa;--bg4:#e3e8f5;
+  --border:#d1d8f0;--border2:#b8c3e8;
+  --fg:#111827;--fg2:#374151;--fg3:#6b7280;
+  --accent:#16a34a;--accent-bg:rgba(22,163,74,.08);--accent-dim:#15803d;
+  --warn:#d97706;--warn-bg:rgba(217,119,6,.08);
+  --danger:#dc2626;--danger-bg:rgba(220,38,38,.08);
+  --info:#2563eb;--info-bg:rgba(37,99,235,.08);
+  --purple:#7c3aed;--purple-bg:rgba(124,58,237,.08);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--fg);
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:15px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-bottom:max(32px,env(safe-area-inset-bottom,0px));
+}
+h1,h2,h3,h4{font-family:'DM Serif Display',Georgia,serif;line-height:1.25;text-wrap:balance}
+h1{font-size:clamp(1.6rem,4vw,2.4rem)}
+h2{font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--fg)}
+h3{font-size:1.1rem;color:var(--fg)}
+h4{font-size:.95rem;color:var(--fg2);font-family:'DM Sans',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+p{color:var(--fg2);margin-bottom:.75rem}
+p:last-child{margin-bottom:0}
+strong{color:var(--fg);font-weight:600}
+a{color:var(--accent);text-decoration:none}
+ul,ol{color:var(--fg2);padding-left:1.4em}
+li{margin-bottom:.35rem}
+li:last-child{margin-bottom:0}
+
+/* HEADER */
+.site-header{
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  padding:20px 0 0;
+  position:sticky;top:0;z-index:100;
+  padding-left:max(20px,env(safe-area-inset-left,0px));
+  padding-right:max(20px,env(safe-area-inset-right,0px));
+}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:16px}
+.site-title{font-family:'DM Serif Display',Georgia,serif;font-size:1.3rem;color:var(--fg);line-height:1.2}
+.site-subtitle{font-size:.8rem;color:var(--fg3);margin-top:2px}
+.badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:600;letter-spacing:.04em}
+
+/* TABS */
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  flex-shrink:0;
+  background:transparent;border:none;border-bottom:2px solid transparent;
+  color:var(--fg3);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;
+  padding:8px 14px 10px;cursor:pointer;transition:color .15s,border-color .15s;
+  white-space:nowrap;
+}
+.tab-btn:hover{color:var(--fg2)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* CONTENT */
+.content{max-width:900px;margin:0 auto;padding:28px 0}
+.section{display:none}
+.section.active{display:block}
+
+/* CARDS / BLOCKS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:20px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:14px 16px;margin-bottom:14px;border-left:3px solid}
+.callout.green{background:var(--accent-bg);border-color:var(--accent)}
+.callout.yellow{background:var(--warn-bg);border-color:var(--warn)}
+.callout.red{background:var(--danger-bg);border-color:var(--danger)}
+.callout.blue{background:var(--info-bg);border-color:var(--info)}
+.callout.purple{background:var(--purple-bg);border-color:var(--purple)}
+.callout-title{font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.callout.green .callout-title{color:var(--accent)}
+.callout.yellow .callout-title{color:var(--warn)}
+.callout.red .callout-title{color:var(--danger)}
+.callout.blue .callout-title{color:var(--info)}
+.callout.purple .callout-title{color:var(--purple)}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:.87rem;min-width:400px}
+th{background:var(--bg3);color:var(--fg2);text-align:left;padding:10px 14px;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;color:var(--fg2);border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+td strong{color:var(--fg)}
+
+/* STEPS */
+.steps{counter-reset:step;list-style:none;padding:0}
+.steps li{counter-increment:step;padding:12px 16px 12px 52px;position:relative;border-left:2px solid var(--border2);margin-left:16px;margin-bottom:4px}
+.steps li::before{content:counter(step);position:absolute;left:-18px;top:10px;width:32px;height:32px;border-radius:50%;background:var(--bg3);border:2px solid var(--border2);color:var(--fg2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem}
+.steps li:last-child{border-left:2px solid transparent}
+.steps li strong{color:var(--fg);display:block;margin-bottom:4px}
+
+/* RULE GRID */
+.rule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:16px}
+.rule-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.rule-icon{flex-shrink:0;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.rule-icon.green{background:var(--accent-bg)}
+.rule-icon.red{background:var(--danger-bg)}
+.rule-icon.yellow{background:var(--warn-bg)}
+.rule-text{font-size:.85rem;color:var(--fg2);line-height:1.4}
+.rule-text strong{color:var(--fg);display:block;font-size:.88rem}
+
+/* TRAVA CARDS */
+.trava-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.trava-header{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.trava-num{width:36px;height:36px;border-radius:50%;background:var(--danger-bg);border:2px solid var(--danger);color:var(--danger);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;flex-shrink:0}
+.trava-title{font-family:'DM Serif Display',serif;font-size:1.05rem}
+.trava-body{padding:16px 18px}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:16px}
+.tl-dot{position:absolute;left:-24px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);flex-shrink:0}
+.tl-dot.warn{background:var(--warn)}
+.tl-dot.info{background:var(--info)}
+.tl-label{font-weight:600;color:var(--fg);font-size:.9rem;margin-bottom:4px}
+.tl-desc{font-size:.85rem;color:var(--fg2);line-height:1.5}
+
+/* RATING SCALE */
+.rating-scale{display:flex;gap:4px;flex-wrap:wrap;margin:12px 0}
+.rating-pill{padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.04em}
+.r-bad{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.r-mid{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+.r-good{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
+
+/* CALC BOX */
+.calc-box{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:16px 18px;font-family:'DM Sans',monospace;font-size:.87rem;line-height:1.9}
+.calc-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.calc-row .label{color:var(--fg2);min-width:260px}
+.calc-row .val{color:var(--accent);font-weight:700}
+.calc-sep{border-top:1px solid var(--border);margin:8px 0}
+
+/* SCRIPT BOX */
+.script-box{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:18px 20px;position:relative;margin-bottom:14px}
+.script-box::before{content:'Script';position:absolute;top:10px;right:12px;font-size:.7rem;color:var(--fg3);text-transform:uppercase;letter-spacing:.06em}
+.script-line{padding:8px 12px;border-radius:6px;margin-bottom:6px;font-size:.87rem;line-height:1.5}
+.script-line.consultor{background:var(--accent-bg);border-left:3px solid var(--accent)}
+.script-line.cliente{background:var(--bg4);border-left:3px solid var(--border2)}
+.script-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-weight:700}
+.script-line.consultor .script-label{color:var(--accent)}
+.script-line.cliente .script-label{color:var(--fg3)}
+
+/* CASE STUDY */
+.case{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--info);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px}
+.case-title{font-weight:700;color:var(--fg);font-size:.9rem;margin-bottom:6px}
+.case-meta{font-size:.78rem;color:var(--fg3);margin-bottom:8px;display:flex;gap:14px;flex-wrap:wrap}
+.case-body{font-size:.85rem;color:var(--fg2);line-height:1.55}
+
+/* SECTION TITLE */
+.section-title{margin-bottom:6px}
+.section-desc{color:var(--fg3);font-size:.88rem;margin-bottom:24px}
+.subsection{margin-bottom:28px}
+.subsection-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--fg3);font-weight:600;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* PILL TAGS */
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tag{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:2px 10px;font-size:.75rem;color:var(--fg2)}
+.tag.accent{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.tag.warn{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.tag.danger{background:var(--danger-bg);border-color:var(--danger);color:var(--danger)}
+
+/* THEME TOGGLE */
+.theme-toggle{position:fixed;bottom:20px;right:max(20px,env(safe-area-inset-right,0px));z-index:200;background:var(--bg2);border:1px solid var(--border2);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+
+/* COLLAPSE */
+details{margin-bottom:10px}
+details>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-weight:600;font-size:.9rem;color:var(--fg)}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:'▼';font-size:.7rem;color:var(--fg3);transition:transform .2s}
+details[open]>summary{border-radius:8px 8px 0 0;border-bottom:1px solid var(--border)}
+details[open]>summary::after{transform:rotate(-180deg)}
+details>.detail-body{background:var(--bg2);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:14px 16px}
+
+@media(max-width:600px){
+  .card-grid{grid-template-columns:1fr}
+  .rule-grid{grid-template-columns:1fr 1fr}
+  .calc-row .label{min-width:0;flex:1}
+  .header-top{flex-direction:column;gap:8px}
+}
+
+/* ===== NAVEGAÇÃO NOVA ===== */
+.site-header{padding-bottom:0}
+.header-top{align-items:center;padding-bottom:14px}
+.menu-btn{display:none;align-items:center;gap:8px;max-width:58%;background:var(--bg3);border:1px solid var(--border2);color:var(--fg);border-radius:10px;padding:9px 12px;font:600 .85rem 'DM Sans',sans-serif;cursor:pointer}
+.menu-btn .bars{font-size:1.1rem;line-height:1}
+.menu-btn #cur-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:36px;max-width:1220px;margin:0 auto;align-items:start}
+.layout .content{max-width:none;min-width:0;margin:0;padding:28px 0 60px}
+#menu{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto;padding:18px 0 24px;scrollbar-width:thin}
+.menu-head{display:none}
+.menu-group{margin-bottom:18px}
+.menu-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--fg3);padding:0 12px 6px}
+#menu .tab-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;white-space:normal;border:none;border-left:3px solid transparent;border-radius:0 8px 8px 0;background:transparent;color:var(--fg2);font:500 .92rem 'DM Sans',sans-serif;padding:9px 12px;cursor:pointer}
+#menu .tab-btn .num{flex:0 0 22px;height:22px;border-radius:50%;background:var(--bg3);color:var(--fg3);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+#menu .tab-btn:hover{background:var(--bg3);color:var(--fg)}
+#menu .tab-btn.active{background:var(--accent-bg);border-left-color:var(--accent);color:var(--accent);font-weight:700}
+#menu .tab-btn.active .num{background:var(--accent);color:var(--bg)}
+.scrim{display:none}
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--border)}
+.pager button{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--border2);color:var(--fg);border-radius:12px;padding:14px 16px;text-align:left;font:600 .9rem 'DM Sans',sans-serif;cursor:pointer}
+.pager button small{display:block;color:var(--fg3);font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.pager button.next{text-align:right}
+.pager button:hover{border-color:var(--accent)}
+.pager .spacer{flex:1}
+@media(max-width:900px){
+  .layout{display:block}
+  .menu-btn{display:inline-flex}
+  .site-title{font-size:1.1rem}
+  .site-subtitle{display:none}
+  .header-top{flex-direction:row;gap:10px}
+  #menu{position:fixed;z-index:300;top:0;left:0;bottom:0;width:min(86vw,340px);max-height:none;background:var(--bg);border-right:1px solid var(--border2);padding:0 0 max(24px,env(safe-area-inset-bottom,0px));transform:translateX(-102%);transition:transform .22s ease;box-shadow:8px 0 30px rgba(0,0,0,.35)}
+  #menu.open{transform:none}
+  .menu-head{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);padding:max(16px,env(safe-area-inset-top,0px)) 16px 12px;border-bottom:1px solid var(--border);margin-bottom:12px;font-weight:700;font-family:'DM Serif Display',serif;font-size:1.15rem}
+  .menu-close{background:var(--bg3);border:1px solid var(--border2);color:var(--fg);border-radius:8px;width:36px;height:36px;font-size:1rem;cursor:pointer}
+  #menu .tab-btn{padding:13px 16px;font-size:1rem}
+  .scrim{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.55);display:block;opacity:0;pointer-events:none;transition:opacity .2s}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .content{padding-top:18px}
+  .pager{flex-direction:column}
+  .pager button.next{text-align:left}
+  .section h2.section-title{font-size:1.45rem}
+}
+</style>
+
+</head>
+<body>
+<div class="site-header">
+  <div class="header-top">
+    <div>
+      <div class="site-title">Vivendo de Rating Bancário</div>
+      <div class="site-subtitle">Consultor 360 · Instrutor Helico · Goiânia · 40 aulas relidas e organizadas por tema</div>
+    </div>
+    <button class="menu-btn" onclick="toggleMenu(true)" aria-label="Abrir menu"><span class="bars">☰</span><span id="cur-label">Fundamentos</span></button>
+  </div>
+  
+</div>
+
+<div class="layout">
+<nav id="menu" aria-label="Seções do guia">
+<div class="menu-head"><span>Seções</span><button class="menu-close" onclick="toggleMenu(false)" aria-label="Fechar menu">✕</button></div>
+<div class="menu-group"><div class="menu-title">Base</div>
+<button class="tab-btn" data-tab="fundamentos" onclick="showTab('fundamentos')"><span class="num">1</span>Fundamentos</button>
+<button class="tab-btn" data-tab="travas" onclick="showTab('travas')"><span class="num">2</span>As 7 Travas</button>
+<button class="tab-btn" data-tab="processo" onclick="showTab('processo')"><span class="num">3</span>O Processo</button>
+</div>
+<div class="menu-group"><div class="menu-title">Operação</div>
+<button class="tab-btn" data-tab="consultas" onclick="showTab('consultas')"><span class="num">4</span>Sistema de Consultas</button>
+<button class="tab-btn" data-tab="bancos" onclick="showTab('bancos')"><span class="num">5</span>Bancos & Relacionamento</button>
+<button class="tab-btn" data-tab="bacen" onclick="showTab('bacen')"><span class="num">6</span>Bacen & Registrato</button>
+<button class="tab-btn" data-tab="posrating" onclick="showTab('posrating')"><span class="num">7</span>Pós-Rating</button>
+<button class="tab-btn" data-tab="credito" onclick="showTab('credito')"><span class="num">8</span>Linhas de Crédito</button>
+</div>
+<div class="menu-group"><div class="menu-title">Vendas</div>
+<button class="tab-btn" data-tab="scripts" onclick="showTab('scripts')"><span class="num">9</span>Scripts Detalhados</button>
+<button class="tab-btn" data-tab="precos" onclick="showTab('precos')"><span class="num">10</span>Preços & Ganhos</button>
+<button class="tab-btn" data-tab="vendas" onclick="showTab('vendas')"><span class="num">11</span>Casos & Objeções</button>
+</div>
+<div class="menu-group"><div class="menu-title">Negócio</div>
+<button class="tab-btn" data-tab="negocio" onclick="showTab('negocio')"><span class="num">12</span>Montar o Negócio</button>
+</div>
+</nav>
+<div class="scrim" onclick="toggleMenu(false)"></div>
+<div class="content">
+
+<!-- ═══════════════ TAB 1: FUNDAMENTOS ═══════════════ -->
+<section id="tab-fundamentos" class="section active">
+  <h2 class="section-title">Fundamentos do Rating Bancário</h2>
+  <p class="section-desc">O que é, como funciona e por que é diferente do Score Serasa</p>
+
+  <div class="subsection">
+    <div class="subsection-label">O que é rating bancário</div>
+    <div class="card">
+      <h3 style="margin-bottom:10px">Rating Bancário ≠ Score Serasa</h3>
+      <p>O <strong>rating bancário</strong> é a classificação de risco criada pelo Banco Central do Brasil para os bancos avaliarem clientes internamente. Ele existe porque, com a proliferação dos bancos digitais, os bancos precisavam de um sistema próprio e unificado.</p>
+      <p>O <strong>Score Serasa</strong> serve apenas para crediário, lojas e boletos. Os bancos <em>não usam</em> o Score como critério principal — eles usam o rating. É por isso que tanta gente tem Score 900+ e ainda não consegue crédito bancário.</p>
+      <div class="rating-scale">
+        <span class="rating-pill r-bad">C−</span>
+        <span class="rating-pill r-bad">C</span>
+        <span class="rating-pill r-bad">C+</span>
+        <span class="rating-pill r-mid">B−</span>
+        <span class="rating-pill r-mid">B</span>
+        <span class="rating-pill r-mid">B+</span>
+        <span class="rating-pill r-mid">BB</span>
+        <span class="rating-pill r-mid">BBB</span>
+        <span class="rating-pill r-good">A</span>
+        <span class="rating-pill r-good">AA</span>
+        <span class="rating-pill r-good">AAA</span>
+      </div>
+      <p style="font-size:.85rem;color:var(--fg3)">C− é o pior · AAA é o melhor · Com AAA: juros menores + limites maiores + acesso a linhas premium</p>
+      <div class="callout yellow" style="margin-top:12px">
+        <div class="callout-title">⚠ Ponto Importante</div>
+        <p>Rating <strong>B</strong> (sem dívidas) é pior que Rating <strong>C</strong> (com dívidas quitadas). B significa que o banco não conhece você — você é um desconhecido. C pelo menos tem histórico. É a situação do cliente que "nunca deve nada" mas também nunca teve crédito.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">As 3 razões pelas quais o banco nega crédito</div>
+    <div class="card-grid">
+      <div class="card-sm">
+        <div class="tags"><span class="tag danger">Trava #1</span></div>
+        <h3 style="margin-bottom:8px">Dívida Ativa</h3>
+        <p>Nome sujo, atraso, protesto, execução fiscal. Nenhum banco libera crédito com dívida ativa pendente. <strong>Regra de ouro: não iniciar o serviço com pendências ativas.</strong> Exigir que o cliente negocie primeiro.</p>
+      </div>
+      <div class="card-sm">
+        <div class="tags"><span class="tag warn">Trava #2</span></div>
+        <h3 style="margin-bottom:8px">Divergência de Dados</h3>
+        <p>Endereços, telefones, e-mails diferentes nos birôs vs. o que o cliente informa. <strong>Esta é a causa mais comum</strong> — clientes com Score 900 sem crédito quase sempre têm este problema. 95% dos clientes têm algum grau de divergência.</p>
+      </div>
+      <div class="card-sm">
+        <div class="tags"><span class="tag">Trava #3</span></div>
+        <h3 style="margin-bottom:8px">Comportamento Inadequado</h3>
+        <p>Cheque especial, consultas excessivas, diluição de movimentação em vários bancos digitais, atraso de contas. O banco avalia o seu <em>comportamento financeiro</em>, não só o seu histórico de dívidas.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Como o banco enxerga sua renda — Capacidade de Pagamento</div>
+    <div class="card">
+      <h3 style="margin-bottom:14px">Fórmula da Capacidade de Pagamento</h3>
+      <p>O banco consulta a <strong>renda presumida</strong> no Banco Central — não o que você diz que ganha. Essa renda é calculada com base nos documentos registrados nos órgãos de proteção ao crédito (Serasa, SPC, Boa Vista, COD) e na Receita Federal.</p>
+      <div class="calc-box">
+        <div class="calc-row"><span class="label">Capacidade de pagamento =</span><span class="val">Renda presumida ÷ 2</span></div>
+        <div class="calc-row"><span class="label">Limite de cartão (máximo) =</span><span class="val">Capacidade de pagamento × 3</span></div>
+        <div class="calc-row"><span class="label">Parcela máxima financiamento =</span><span class="val">Capacidade de pagamento × 80%</span></div>
+        <div class="calc-sep"></div>
+        <div style="font-size:.8rem;color:var(--fg3);margin-bottom:6px">Exemplo prático — Renda presumida R$30.000:</div>
+        <div class="calc-row"><span class="label">→ Capacidade de pagamento =</span><span class="val">R$ 15.000</span></div>
+        <div class="calc-row"><span class="label">→ Limite de cartão (até) =</span><span class="val">R$ 45.000</span></div>
+        <div class="calc-row"><span class="label">→ Parcela máxima financiamento =</span><span class="val">R$ 12.000/mês</span></div>
+        <div class="calc-row"><span class="label">→ Imóvel (estimado) =</span><span class="val">R$ 700k–1M</span></div>
+      </div>
+      <div class="callout red">
+        <div class="callout-title">❌ Movimentação bancária ≠ Renda</div>
+        <p>O banco NÃO avalia quanto entra na conta. Ele avalia quanto <strong>dorme na conta na virada do mês</strong> (do dia 30 para o dia 1). Isso é chamado de <strong>"estado de flow"</strong>. Se entram R$200k por mês mas saem R$204k, o banco calcula sua renda como negativa.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Estado de Flow — O segredo que nenhum gerente conta</div>
+    <div class="card">
+      <h3 style="margin-bottom:10px">O Dinheiro Precisa "Dormir" na Conta</h3>
+      <p>Quando o instrutor trabalhava no banco, era orientado sobre o <strong>"estado de flow"</strong>: o período da noite para o dia seguinte (virada do mês) em que o banco analisa o saldo. O banco também ganha durante esse período, por isso é crucial.</p>
+      <div class="callout blue">
+        <div class="callout-title">📊 Caso Real da Aula</div>
+        <p>Cliente mandou 3 meses de extrato. Movimentação total: <strong>R$ 600.000</strong>. Mas a cada mês ele usava o cheque especial na virada. Resultado: <strong>saldo na virada = negativo</strong>. O banco calculava a renda dele como zero — ou negativa. Toda aquela movimentação foi ignorada.</p>
+      </div>
+      <p><strong>O que o banco avalia:</strong> Se você ganha R$40k mas não tem investimento nenhum, não tem CDB, não tem nenhum saldo — o banco não acredita que você ganha R$40k. "Uma pessoa que ganha 40k e é organizada tem pelo menos R$5k–10k no CDB."</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Investidor vs. Tomador — Como o banco te classifica</div>
+    <div class="card-grid">
+      <div class="card-sm" style="border-color:var(--danger)">
+        <h4 style="color:var(--danger);margin-bottom:10px">👤 Tomador de Crédito</h4>
+        <ul>
+          <li>Só quer usar crédito para consumo</li>
+          <li>Procura o banco apenas em momentos de necessidade</li>
+          <li>Não investe, não mantém saldo</li>
+          <li>Alto risco para o banco</li>
+          <li>Usa cheque especial com frequência</li>
+          <li>Pede crédito em vários bancos ao mesmo tempo</li>
+        </ul>
+        <div style="margin-top:10px;padding:8px 12px;background:var(--danger-bg);border-radius:6px;font-size:.82rem;color:var(--danger)">
+          Resultado: juros altos · limites menores · linhas caras
+        </div>
+      </div>
+      <div class="card-sm" style="border-color:var(--accent)">
+        <h4 style="color:var(--accent);margin-bottom:10px">📈 Investidor</h4>
+        <ul>
+          <li>Mantém investimentos (CDB, Tesouro Direto)</li>
+          <li>Mantém saldo na conta</li>
+          <li>Usa crédito como ferramenta, não como socorro</li>
+          <li>Planeja antes de contratar crédito</li>
+          <li>Baixo risco para o banco</li>
+          <li>Contrata produtos (seguro, previdência)</li>
+        </ul>
+        <div style="margin-top:10px;padding:8px 12px;background:var(--accent-bg);border-radius:6px;font-size:.82rem;color:var(--accent)">
+          Resultado: menores taxas · limites maiores · crédito facilitado
+        </div>
+      </div>
+    </div>
+    <div class="callout green">
+      <div class="callout-title">✅ Orientação Principal Pós-Rating</div>
+      <p>Sua missão como consultor é transformar seu cliente de <strong>tomador em investidor</strong>. Mesmo que seja um CDB de R$100 — isso já muda a classificação interna dele no banco.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Qual banco usar — Banco físico vs. digital</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Situação</th><th>Banco Recomendado</th><th>Motivo</th></tr></thead>
+        <tbody>
+          <tr><td>Estruturação geral</td><td><strong>Santander</strong></td><td>Escala 0–10 clara, gerente acessível, bom para cartão</td></tr>
+          <tr><td>Nunca teve dívida com nenhum banco</td><td><strong>Santander ou Itaú</strong></td><td>Melhores para novos clientes limpos</td></tr>
+          <tr><td>Já teve dívida no Santander</td><td><strong>Bradesco ou Itaú</strong></td><td>Trava interna — banco com dívida negada 1 ano mínimo</td></tr>
+          <tr><td>Financiamento habitacional</td><td><strong>Caixa Econômica</strong></td><td>Menor taxa, acesso a recursos do FGTS</td></tr>
+          <tr><td>Capital de giro PJ / PRONAMP</td><td><strong>Bradesco ou Santander</strong></td><td>Melhor estrutura que banco público para PJ, app direto</td></tr>
+          <tr><td>Cartão premium</td><td><strong>Bradesco</strong> (Prime/Amex)</td><td>Melhor portfólio de cartões</td></tr>
+          <tr><td><strong>NUNCA para estruturação</strong></td><td>Nubank, C6, PagBank, Inter</td><td>Banco digital = sem gerente = limitado em crédito</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout yellow">
+      <div class="callout-title">⚠ Por que banco digital não serve</div>
+      <p>Banco digital não tem gerente. <strong>Todos os cartões de limite alto foram arrumados pelo gerente</strong>, não pelo aplicativo. O gerente pode fazer uma "defesa de crédito" internamente, negociar sem garantia, insistir pelo cliente. O app apenas aceita ou nega automaticamente.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Documentos para comprovar renda</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Documento</th><th>Peso</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Declaração de Imposto de Renda</strong></td><td><span class="tag accent">Melhor</span></td><td>Base principal para cálculo de renda presumida no Bacen</td></tr>
+          <tr><td>Extrato bancário (últimos 3 meses)</td><td><span class="tag warn">Médio</span></td><td>Desde 2024 alguns bancos não aceitam mais; IR é prioridade</td></tr>
+          <tr><td>Pró-labore / DECORE</td><td><span class="tag">Válido</span></td><td>Para MEI e empresários sem IR atualizado</td></tr>
+          <tr><td>Contracheque</td><td><span class="tag">Válido</span></td><td>Para CLT — comprovante mais simples</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout red">
+      <div class="callout-title">🔴 Atenção sobre renda no sistema</div>
+      <p>A atualização de renda que a gente faz nos birôs de crédito <strong>não vai para a Receita Federal</strong>. Na Receita só atualizamos dados pessoais (endereço, profissão, estado civil). A renda no Bacen é cruzada com o IR declarado — por isso é fundamental ter o IR atualizado.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">O que é o serviço — Resumo executivo</div>
+    <div class="card" style="border-color:var(--accent)">
+      <h3 style="margin-bottom:12px">O Serviço de Rating Bancário em 50/50</h3>
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--info);margin-bottom:8px">50% — Atualização de Dados</h4>
+          <ul>
+            <li>Atualizar dados nos birôs: Serasa, Boa Vista, SPC, COD</li>
+            <li>Atualizar na Receita Federal (endereço, profissão, estado civil)</li>
+            <li>Atualizar no Banco Central</li>
+            <li>Unificar endereço, e-mail, telefone (UM de cada)</li>
+            <li>Ajustar renda presumida</li>
+            <li>Apagar histórico de consultas (últimos 60 meses)</li>
+            <li>Retirar empresas fechadas/saídas do CPF</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">50% — Orientação Estratégica</h4>
+          <ul>
+            <li>Qual banco usar e por quê</li>
+            <li>Como se comportar nos 90 dias</li>
+            <li>Quais produtos contratar no banco</li>
+            <li>Quando e como solicitar crédito</li>
+            <li>Como falar com o gerente</li>
+            <li>Remoção de apontamentos no Bacen</li>
+            <li>Acompanhamento até primeira aprovação</li>
+          </ul>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-grid" style="margin-bottom:0">
+        <div style="text-align:center"><div style="font-size:1.6rem;font-weight:700;color:var(--accent)">45 dias</div><div style="font-size:.8rem;color:var(--fg3)">processo de compliance + jurídico</div></div>
+        <div style="text-align:center"><div style="font-size:1.6rem;font-weight:700;color:var(--warn)">Dia 20</div><div style="font-size:.8rem;color:var(--fg3)">Bacen atualiza e "cascateia" para todos os bancos</div></div>
+        <div style="text-align:center"><div style="font-size:1.6rem;font-weight:700;color:var(--info)">90 dias</div><div style="font-size:.8rem;color:var(--fg3)">janela de comportamento para primeira solicitação</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TAB 2: AS 7 TRAVAS ═══════════════ -->
+<section id="tab-travas" class="section">
+  <h2 class="section-title">As 7 Travas que Impedem o Crédito</h2>
+  <p class="section-desc">Diagnóstico completo — como identificar cada trava e como resolver</p>
+
+  <div class="callout blue">
+    <div class="callout-title">ℹ Como usar este diagnóstico</div>
+    <p>Durante a consulta ao vivo, mostre o relatório linha a linha para o cliente. Para cada trava identificada, apresente como evidência de que "o banco não pode liberar". O diagnóstico feito junto com o cliente <strong>vende sozinho</strong> — ele se convence ao ver os próprios dados.</p>
+  </div>
+
+  <div class="trava-card">
+    <div class="trava-header">
+      <div class="trava-num">1</div>
+      <div>
+        <div class="trava-title">Histórico Negativo de Dívidas</div>
+        <div style="font-size:.8rem;color:var(--fg3)">Atrasos registrados que permanecem mesmo após quitação</div>
+      </div>
+    </div>
+    <div class="trava-body">
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--danger);margin-bottom:8px">O que causa esta trava</h4>
+          <ul>
+            <li>Atrasos frequentes no passado</li>
+            <li>Quebra de acordo (negociou e atrasou de novo)</li>
+            <li>Períodos longos de inadimplência</li>
+            <li>Pagamento das dívidas <em>sem</em> reconstrução de histórico positivo</li>
+            <li>Renegociação com banco (trava interna de 1 ano mínimo)</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Como resolver</h4>
+          <ul>
+            <li><strong>CDB + cartão de crédito:</strong> constrói histórico positivo em paralelo</li>
+            <li>Aguardar janela de 90 dias de comportamento positivo</li>
+            <li>Pagar sempre em dia — sem nenhum atraso</li>
+            <li>Para apontamentos no Bacen: processo administrativo + judicial</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout yellow">
+        <div class="callout-title">⚠ Crítico</div>
+        <p><strong>O banco não remove apontamento quando você paga.</strong> Dívida quitada ≠ apontamento removido. Isso precisa ser feito via reclamação administrativa (gratuita) → ação judicial. E o banco nunca notifica o cliente quando aponta — isso é ilegal e vira prova na ação.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="trava-card">
+    <div class="trava-header">
+      <div class="trava-num">2</div>
+      <div>
+        <div class="trava-title">Excesso de Consultas</div>
+        <div style="font-size:.8rem;color:var(--fg3)">Muitas consultas no CPF em curto período = sinal de desespero</div>
+      </div>
+    </div>
+    <div class="trava-body">
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--danger);margin-bottom:8px">Por que é trava</h4>
+          <ul>
+            <li>Banco espera no máximo <strong>4 consultas por ano</strong></li>
+            <li>Mais de 4 = "pessoa desesperada buscando crédito"</li>
+            <li>Histórico de consultas é visível por <strong>60 meses (5 anos)</strong></li>
+            <li>Cada simulação de crédito conta como consulta</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Como o serviço resolve</h4>
+          <ul>
+            <li>Apaga o histórico de consultas dos últimos 2 anos no sistema</li>
+            <li>Preservar: consultas de seguradora e conta de telefone (deixar 2)</li>
+            <li>Após o serviço: só pedir crédito pelo gerente</li>
+            <li>Nunca fazer múltiplas simulações em paralelo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trava-card">
+    <div class="trava-header">
+      <div class="trava-num">3</div>
+      <div>
+        <div class="trava-title">Capacidade de Pagamento Atingida</div>
+        <div style="font-size:.8rem;color:var(--fg3)">Renda presumida comprometida — sem margem para novo crédito</div>
+      </div>
+    </div>
+    <div class="trava-body">
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--danger);margin-bottom:8px">Sintomas</h4>
+          <ul>
+            <li>Cliente tem cartão e parcelamentos, mas o banco nega mais</li>
+            <li>Comprometimento de renda acima de 35%</li>
+            <li>Renda presumida baixa + muitos limites de crédito existentes</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Solução</h4>
+          <ul>
+            <li>Aumentar renda presumida no Bacen (via IR atualizado)</li>
+            <li>Encerrar contas de bancos que não usa</li>
+            <li>Fechar cartões sem uso que "consomem margem"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trava-card" style="border-color:var(--warn)">
+    <div class="trava-header">
+      <div class="trava-num">4</div>
+      <div>
+        <div class="trava-title">Dados Divergentes ou Desatualizados</div>
+        <div style="font-size:.8rem;color:var(--fg3)"><strong>A causa mais comum</strong> — 95% dos clientes com crédito negado têm este problema</div>
+      </div>
+    </div>
+    <div class="trava-body">
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--danger);margin-bottom:8px">O que gera divergência</h4>
+          <ul>
+            <li>Múltiplos endereços acumulados ao longo dos anos</li>
+            <li>Vários telefones antigos no sistema (casos de 14+ telefones)</li>
+            <li>E-mails diferentes em cada cadastro</li>
+            <li>Profissão e renda inconsistente entre órgãos</li>
+            <li>Estado civil divergente</li>
+            <li>Endereço desatualizado há anos na Receita Federal</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Como o serviço resolve</h4>
+          <ul>
+            <li>Unificar: <strong>1 endereço, 1 e-mail, 1 telefone</strong></li>
+            <li>Atualizar em Serasa, SPC, Boa Vista, COD e Receita Federal</li>
+            <li>Manter os mesmos dados por <strong>12 meses</strong></li>
+            <li>Cliente também deve levar documentação ao banco para atualizar internamente</li>
+          </ul>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-title">Caso Real — Aula 02 (Marcel, Promissão-SP)</div>
+        <div class="case-meta"><span>Score ~800</span><span>Nome limpo</span><span>Sem crédito</span></div>
+        <div class="case-body">Score alto, nome limpo, mas 4 telefones, 3 e-mails e 3 endereços diferentes no sistema. Capacidade de pagamento zerada. Resultado: banco não sabia nem como contatar o cliente. Diagnóstico: 100% divergência de dados.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trava-card">
+    <div class="trava-header">
+      <div class="trava-num">5</div>
+      <div>
+        <div class="trava-title">Nome na Lista Negra do Banco Central</div>
+        <div style="font-size:.8rem;color:var(--fg3)">Apontamentos de dívidas no Bacen — dívidas pagas que ainda constam</div>
+      </div>
+    </div>
+    <div class="trava-body">
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--danger);margin-bottom:8px">Como acontece</h4>
+          <ul>
+            <li>Banco aponta dívida no Bacen ao entrar em cobrança</li>
+            <li>Cliente paga, mas o banco <strong>não remove</strong> automaticamente</li>
+            <li>Cliente não é notificado (ilegal — vira prova em ação)</li>
+            <li>Pode haver apontamentos de bancos extintos/incorporados</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Processo de remoção</h4>
+          <ol>
+            <li><strong>Reclamação administrativa</strong> — gratuita, via Bacen, contra cada banco. 10 dias de prazo. Quase sempre negado → gera prova.</li>
+            <li><strong>Ação judicial</strong> — cobrada à parte (R$750 por CPF/CNPJ). 90–120 dias. 100% online, comarca do cliente. Pode gerar <strong>indenização</strong>.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="callout blue">
+        <div class="callout-title">ℹ Atualização do Bacen</div>
+        <p>O Banco Central atualiza suas informações todo <strong>dia 20 de cada mês ao meio-dia</strong>, com delay de 60 dias. Para acompanhar: <strong>Registrato</strong> (consultar SCR — Sistema de Informações de Crédito) e <strong>CCS</strong> (Cadastro de Clientes do Sistema Financeiro).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="trava-card">
+    <div class="trava-header">
+      <div class="trava-num">6</div>
+      <div>
+        <div class="trava-title">Rating Bancário Baixo</div>
+        <div style="font-size:.8rem;color:var(--fg3)">Classificação interna abaixo do necessário para liberar crédito</div>
+      </div>
+    </div>
+    <div class="trava-body">
+      <p>O banco tem dois sistemas de classificação que precisam estar bons simultaneamente:</p>
+      <div class="card-grid">
+        <div class="card-sm">
+          <h4 style="color:var(--info);margin-bottom:8px">Rating Bancário (Bacen)</h4>
+          <p style="font-size:.85rem">Classificação nacional. Vai de C− a AAA. Todos os bancos veem. Atualizado pelo processo de rating.</p>
+        </div>
+        <div class="card-sm">
+          <h4 style="color:var(--purple);margin-bottom:8px">Nota de Relacionamento (interno)</h4>
+          <p style="font-size:.85rem">Classificação do banco específico. Ex: Santander usa escala 0–10 (precisa de 7+ para qualquer crédito). Construída pelo relacionamento.</p>
+        </div>
+      </div>
+      <p style="font-size:.85rem;color:var(--fg3)">Ambos precisam estar bons. Rating AAA + nota de relacionamento 0 = sem crédito. Por isso orientar o cliente a construir relacionamento no banco é fundamental.</p>
+    </div>
+  </div>
+
+  <div class="trava-card">
+    <div class="trava-header">
+      <div class="trava-num">7</div>
+      <div>
+        <div class="trava-title">Falta de Relacionamento Bancário</div>
+        <div style="font-size:.8rem;color:var(--fg3)">Banco não conhece o cliente — sem histórico positivo</div>
+      </div>
+    </div>
+    <div class="trava-body">
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--danger);margin-bottom:8px">Sinais de falta de relacionamento</h4>
+          <ul>
+            <li>Conta aberta mas sem movimentação regular</li>
+            <li>Movimentação diluída em 4–5 bancos diferentes</li>
+            <li>Só usa banco digital (sem gerente)</li>
+            <li>Nunca contratou produto (seguro, CDB, previdência)</li>
+            <li>Nunca foi pessoalmente à agência</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Como construir relacionamento</h4>
+          <ul>
+            <li><strong>Mínimo 3 débitos automáticos</strong> (luz, internet, telefone)</li>
+            <li><strong>CDB/CDI</strong> acima de R$100 no banco</li>
+            <li><strong>Tesouro Direto</strong> pelo banco (não pela corretora)</li>
+            <li><strong>Seguro de vida</strong> (banco valoriza muito)</li>
+            <li>Concentrar movimentação em 1–2 bancos máximo</li>
+            <li>Abrir conta na <strong>agência física</strong>, não pelo app</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TAB 3: O PROCESSO ═══════════════ -->
+<section id="tab-processo" class="section">
+  <h2 class="section-title">O Processo Completo</h2>
+  <p class="section-desc">Do diagnóstico ao fechamento — fluxo operacional detalhado</p>
+
+  <div class="subsection">
+    <div class="subsection-label">Fluxo completo — 6 etapas</div>
+    <ul class="steps">
+      <li>
+        <strong>Diagnóstico (antes de fechar)</strong>
+        Puxar relatório no sistema de consultas. Verificar pendências ativas → se tiver, NÃO fechar. Verificar banco atual → se for digital, trocar. Identificar as travas: rating, renda, dados, consultas, Bacen.
+      </li>
+      <li>
+        <strong>Apresentação ao cliente</strong>
+        Mostrar o relatório ao vivo, linha a linha. Classificação de rating → renda presumida vs. real → divergência de dados → birôs → Bacen (apontamentos) → consultas (histórico). O diagnóstico ao vivo vende sozinho.
+      </li>
+      <li>
+        <strong>Fechamento e coleta de documentação</strong>
+        Pedir documentação (RG/CNH, CPF, IR, extrato). Receber sinal ou pagamento integral. Preencher formulário com UN endereço, UM e-mail, UM telefone — estes ficam por 12 meses. Liberar acesso ao portal do cliente.
+      </li>
+      <li>
+        <strong>Processo de compliance — 45 dias</strong>
+        Equipe atualiza: Serasa, SPC, Boa Vista, COD, Receita Federal, Bacen. Jurídico cuida dos processos que precisam de intervenção judicial (apontamentos Bacen). Ajuste de renda presumida. Unificação de dados. Remoção de empresas encerradas/saídas do CPF.
+      </li>
+      <li>
+        <strong>Atualização do Banco Central — Dia 20</strong>
+        Todo dia 20 do mês o Bacen atualiza e "cascateia" as informações para todos os bancos. Aguardar o dia 20 mais próximo após os 45 dias. Delay de 60 dias nas informações do Bacen.
+      </li>
+      <li>
+        <strong>Consultoria pós-rating — 90 dias (seu trabalho)</strong>
+        Verificar nova classificação interna. Instruir cliente a ir ao gerente. Planejar a primeira solicitação estratégica. Qual produto pedir primeiro. Acompanhar até a primeira aprovação.
+      </li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Documentação necessária do cliente</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Documento</th><th>Obrigatoriedade</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td><strong>RG ou CNH</strong></td><td><span class="tag accent">Obrigatório</span></td><td>Documento de identidade com foto</td></tr>
+          <tr><td><strong>CPF</strong></td><td><span class="tag accent">Obrigatório</span></td><td>Pode estar no próprio RG/CNH</td></tr>
+          <tr><td><strong>Declaração de Imposto de Renda</strong></td><td><span class="tag accent">Prioritário</span></td><td>Melhor documento para renda — base do Bacen</td></tr>
+          <tr><td>Extrato bancário (3 meses)</td><td><span class="tag warn">Alternativa</span></td><td>Em alguns casos não aceito mais; sempre priorizar IR</td></tr>
+          <tr><td>Contracheque / pró-labore / DECORE</td><td><span class="tag">Complementar</span></td><td>Terceira opção — válido para autônomos e MEIs</td></tr>
+          <tr><td>Comprovante de residência</td><td><span class="tag accent">Obrigatório</span></td><td>Deve bater com o endereço unificado no sistema</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Prazos-chave do processo</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Marco</th><th>Tempo</th><th>Detalhe</th></tr></thead>
+        <tbody>
+          <tr><td>Processo de compliance + jurídico</td><td><strong>45 dias</strong></td><td>Equipe trabalhando nos birôs e Bacen</td></tr>
+          <tr><td>Atualização no Banco Central</td><td><strong>Dia 20</strong></td><td>Bacen "cascateia" para todos os bancos</td></tr>
+          <tr><td>Tempo total (processo + atualização)</td><td><strong>~60 dias</strong></td><td>Aguardar o dia 20 mais próximo após 45 dias</td></tr>
+          <tr><td>Janela de comportamento pós-atualização</td><td><strong>30 dias</strong></td><td>Comportamento correto nesse período</td></tr>
+          <tr><td><strong>Total até primeira solicitação</strong></td><td><strong>~90 dias</strong></td><td>Regra geral para o cliente</td></tr>
+          <tr><td>Entre solicitações (janela obrigatória)</td><td><strong>90 dias</strong></td><td>Banco avalia a cada 90 dias</td></tr>
+          <tr><td>Manutenção dos dados cadastrais</td><td><strong>12 meses</strong></td><td>Mesmo endereço, e-mail, telefone</td></tr>
+          <tr><td>Histórico de consultas apagado</td><td><strong>60 meses</strong></td><td>5 anos de histórico limpo</td></tr>
+          <tr><td>Atualização de renda no banco</td><td><strong>A cada 6 meses</strong></td><td>Cliente deve ir pessoalmente ao banco</td></tr>
+          <tr><td>Trava interna por renegociação</td><td><strong>1 ano mínimo</strong></td><td>Não usar o banco com quem renegociou</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">O que NÃO fazer durante o processo (orientar o cliente)</div>
+    <div class="rule-grid">
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Usar cheque especial</strong> Cria trava interna no banco e é visível para todos os bancos. Sinal claro de tomador de crédito.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Open Finance</strong> Compartilha dados positivos E negativos com todos os bancos automaticamente.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Múltiplas simulações</strong> Cada simulação conta como consulta. O banco vê como "desespero financeiro".</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Pedir em vários bancos</strong> Passa imagem de desespero. Concentrar apenas no gerente do banco indicado.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Aceitar primeira oferta</strong> Banco começa com R$3k para testar. Se você não pega, vai a R$5k, R$10k... até o teto real.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Confiar no gerente</strong> Gerente age pelos interesses do banco, não do cliente. Vai oferecer crédito mais caro.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Usar banco digital</strong> Nubank, PagBank, C6, Inter. Sem gerente = sem defesa de crédito = limitado.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">❌</div>
+        <div class="rule-text"><strong>Movimentar 4+ contas</strong> Renda diluída = banco não calcula renda real de nenhuma conta.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Processo de remoção de apontamentos no Bacen</div>
+    <div class="card">
+      <h3 style="margin-bottom:14px">Como Tirar Apontamentos do Banco Central</h3>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot info"></div>
+          <div class="tl-label">Passo 1 — Reclamação Administrativa (gratuita)</div>
+          <div class="tl-desc">Abrir reclamação no Bacen contra cada banco individualmente. Prazo de 10 dias para resposta. Quase sempre negam. Mas isso gera a <strong>prova documental</strong> necessária para a ação judicial.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot warn"></div>
+          <div class="tl-label">Passo 2 — Ação Judicial (cobrada à parte)</div>
+          <div class="tl-desc">R$750 por CPF/CNPJ. 90–120 dias. 100% online. Comarca do cliente. Audiência virtual. Jurídico assessora todo o processo. Resultado: remoção do apontamento + frequentemente uma <strong>indenização</strong> (banco não notificou o cliente quando apontou — isso é ilegal).</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-label">Por que funciona</div>
+          <div class="tl-desc">O banco é obrigado por lei a notificar o cliente quando aponta. Quase nunca faz. A falta de notificação é prova de dano e base para indenização. Na prática, o banco prefere retirar o apontamento do que enfrentar o processo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Portal do cliente: o que existe lá dentro (aulas 31, 32, 34)</div>
+    <ul>
+      <li><strong>Barra de progresso</strong> (ex.: 62%), aba <strong>Mensagens</strong> (o compliance deixa recados; o cliente deve checar e dar o "ciente"), status por etapa ("aprovação de dossiê", "apresentação nos birôs e na Receita"), "documentação não aprovada → refazer", "processo concluído com sucesso".</li>
+      <li><strong>Documentos pedidos:</strong> identidade, CPF, extrato da conta de maior movimento (3 meses) para capacidade de pagamento, relatório de consultas do Serasa (o cliente baixa) para gerar o termo de exclusão, e o SCR de 5 anos.</li>
+      <li>O acesso ao portal só é criado <strong>após o pagamento/entrada</strong> e o contrato. Cliente pode subir documentos no mesmo dia e a equipe inicia no dia seguinte.</li>
+      <li>CNPJ no formulário só se for fazer rating do CNPJ.</li>
+      <li><strong>Segunda reunião durante os 45 dias (aulas 33, 34, 36):</strong> a consultora agenda uma call só para ler o SCR/CCS com o cliente na tela e passar orientações. "Se ninguém te fala, como você vai saber?" Esse é o gatilho para vender o Bacen.</li>
+      <li>Cartão à vista: o valor à vista (R$ 1.980) <strong>não parcela sem juros</strong>; só os R$ 2.790 parcelam em 10×. Cliente que paga por link não fala mais com você no início: a comunicação é com o compliance.</li>
+    </ul>
+    <div class="callout yellow"><div class="callout-title">Divergências entre aulas (anote)</div><p><strong>Dia da atualização do Bacen:</strong> aulas dizem dia 20, "20 e 21" ou "21 ao meio-dia". <strong>Tabela de preço do contrato (aula 03):</strong> aparece uma versão R$ 2.790 → R$ 2.070 em 3× R$ 690, à vista R$ 1.600; a tabela padrão das demos é 3.990/2.790/1.980. <strong>Extrato como renda:</strong> aulas 03/04 aceitam; aula 13 diz que deixou de ser aceito sozinho. Use sempre IR como documento principal.</p></div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-label">Precificação padrão do curso (detalhes e negociação na aba Preços & Ganhos)</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Modalidade</th><th>Valor</th><th>Condição</th></tr></thead>
+        <tbody>
+          <tr><td>Valor cheio</td><td><strong>R$ 3.990</strong></td><td>Sem desconto</td></tr>
+          <tr><td>Parcelado (primeira ligação)</td><td><strong>R$ 2.790</strong></td><td>3× R$930 no boleto/pix ou até 10× sem juros no cartão</td></tr>
+          <tr><td>À vista (primeira ligação)</td><td><strong>R$ 1.980</strong></td><td>Desconto máximo — válido apenas naquela ligação</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout yellow">
+      <div class="callout-title">⚠ Variações vistas nas aulas</div>
+      <p>R$3.990→R$2.500/R$2.300/R$2.200 à vista, R$2.790/R$3.500 parcelado. Cada consultor tem margem de negociação. O importante: sempre apresentar o valor cheio primeiro, depois fazer a oferta da primeira ligação. Nunca deixar o cliente "pensar e ligar depois" — ele quase nunca liga.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TAB 4: PÓS-RATING ═══════════════ -->
+<section id="tab-posrating" class="section">
+  <h2 class="section-title">Pós-Rating — Os 50% que a Maioria Esquece</h2>
+  <p class="section-desc">O que fazer após o processo de 45 dias — orientações completas para o cliente</p>
+
+  <div class="callout purple">
+    <div class="callout-title">📌 O Ponto Central desta Fase</div>
+    <p>O serviço de rating é <strong>50% atualização + 50% orientação</strong>. Muitos consultores fazem os 50% técnicos mas esquecem a orientação. Resultado: cliente não consegue crédito, reclama do serviço. <strong>Essa fase é onde você valida ou destrói sua reputação.</strong></p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Atualização no banco — O que o cliente deve fazer</div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">Levar a Documentação ao Banco (pessoalmente)</h3>
+      <p>O serviço atualiza os birôs de crédito (Serasa, SPC, COD) e o Bacen. Mas o banco tem seu próprio sistema interno. <strong>O cliente precisa ir ao gerente e atualizar os dados internamente também</strong>, pois os bancos cruzam as informações externas com os dados internos.</p>
+      <div class="card-grid" style="margin-top:14px">
+        <div class="card-sm">
+          <h4 style="color:var(--accent);margin-bottom:8px">O que levar ao banco</h4>
+          <ul>
+            <li>Declaração de IR (melhor comprova renda)</li>
+            <li>Comprovante de residência atual</li>
+            <li>Extrato bancário (3 meses)</li>
+            <li>Documento de identidade</li>
+          </ul>
+        </div>
+        <div class="card-sm">
+          <h4 style="color:var(--info);margin-bottom:8px">O que solicitar ao gerente</h4>
+          <ul>
+            <li>Atualização de renda, profissão e dados pessoais</li>
+            <li>Atualização a cada 6 meses (mesmo que seja o mesmo endereço)</li>
+            <li>Nunca mencionar que quer crédito na primeira visita</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout green" style="margin-top:12px">
+        <div class="callout-title">✅ Por que funciona</div>
+        <p>Quando o banco atualiza internamente, a letra do rating (classificação interna) também atualiza em 15–20 dias. E às vezes o banco já libera crédito imediatamente. Um cliente foi ao banco após o serviço e voltou com um cartão de R$5.000 no mesmo dia.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Produtos que o cliente deve contratar no banco</div>
+    <div class="card-grid">
+      <div class="card-sm" style="border-color:var(--accent)">
+        <div style="font-size:1.5rem;margin-bottom:8px">1️⃣</div>
+        <h3 style="margin-bottom:6px">Débito Automático</h3>
+        <p style="font-size:.85rem">Mínimo 3 contas: luz, internet, telefone, fatura do cartão. Mostra previsibilidade ao banco — pagamento pontual todo mês automaticamente.</p>
+      </div>
+      <div class="card-sm" style="border-color:var(--accent)">
+        <div style="font-size:1.5rem;margin-bottom:8px">2️⃣</div>
+        <h3 style="margin-bottom:6px">CDB/CDI</h3>
+        <p style="font-size:.85rem">Valor mínimo de R$100. Muda o perfil de <em>tomador</em> para <em>investidor</em>. O banco não sabe se é pequeno — vê apenas que você está aplicando.</p>
+      </div>
+      <div class="card-sm" style="border-color:var(--info)">
+        <div style="font-size:1.5rem;margin-bottom:8px">3️⃣</div>
+        <h3 style="margin-bottom:6px">Tesouro Direto</h3>
+        <p style="font-size:.85rem">Pelo banco (não pela corretora). Fortalece vínculo com aquele banco específico e melhora o perfil de investidor.</p>
+      </div>
+      <div class="card-sm" style="border-color:var(--warn)">
+        <div style="font-size:1.5rem;margin-bottom:8px">4️⃣</div>
+        <h3 style="margin-bottom:6px">Seguro de Vida</h3>
+        <p style="font-size:.85rem">"O banco valoriza muito." Mostra estabilidade e organização financeira. Bradesco e Santander oferecem. Qualquer valor.</p>
+      </div>
+      <div class="card-sm">
+        <div style="font-size:1.5rem;margin-bottom:8px">5️⃣</div>
+        <h3 style="margin-bottom:6px">Plano de Saúde</h3>
+        <p style="font-size:.85rem">Bradesco Saúde se disponível. Produto de alto valor para o banco — sinaliza compromisso de longo prazo.</p>
+      </div>
+      <div class="card-sm">
+        <div style="font-size:1.5rem;margin-bottom:8px">6️⃣</div>
+        <h3 style="margin-bottom:6px">Conta Corrente Ativa</h3>
+        <p style="font-size:.85rem">Concentrar toda a movimentação em 1–2 bancos. Banco que não recebe movimento exclui o cliente. Entrada e saída na mesma conta.</p>
+      </div>
+    </div>
+    <div class="callout blue">
+      <div class="callout-title">ℹ CDB + Cartão — Para quem está reconstruindo histórico</div>
+      <p>Para clientes que acabaram de limpar o nome e não têm nenhum cartão: a combinação <strong>CDB + cartão de crédito lastreado</strong> cria histórico positivo. Outros bancos veem que você está pagando o cartão em dia — sem saber que é lastreado em CDB. Isso abre portas em outros bancos em 60–90 dias.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Estratégia da primeira solicitação</div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">Como Pedir Crédito Corretamente</h3>
+      <div class="rule-grid">
+        <div class="rule-item">
+          <div class="rule-icon green">✓</div>
+          <div class="rule-text"><strong>Só com o gerente</strong> Nunca pelo aplicativo. O gerente pode fazer defesa de crédito, negociar sem garantia, insistir pelo cliente.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon green">✓</div>
+          <div class="rule-text"><strong>Depois dos 90 dias</strong> Aguardar comportamento correto pelo período completo antes da primeira solicitação.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon red">×</div>
+          <div class="rule-text"><strong>Não aceitar a primeira oferta</strong> Banco começa baixo. Recusar educadamente = banco aumenta a oferta na próxima rodada.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon red">×</div>
+          <div class="rule-text"><strong>Não pedir em vários bancos</strong> Uma tentativa por vez, pelo gerente. Aguardar resultado antes de tentar em outro.</div>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-title">Caso Real — Médico (mencionado na aula)</div>
+        <div class="case-meta"><span>Renda: R$12–13k</span><span>Situação: sem nenhum cartão</span></div>
+        <div class="case-body">Após fazer o rating, foi ao banco com a documentação e seguiu as orientações. Resultado: <strong>R$20.000 de cartão Amex Bradesco</strong>. "Cara, foi uma das felicidades que eu vi em cliente, maravilha."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">A reunião pós-serviço — Como fazer e o que cobrar</div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">A Reunião de 20 Minutos Vale Ouro</h3>
+      <p>Ao invés de mandar um documento genérico, fazer uma <strong>call de 20 minutos</strong> com o cliente passando todas as orientações pessoalmente. Vantagens:</p>
+      <ul style="margin-bottom:12px">
+        <li>Cliente sente confiança — serviço personalizado, não genérico</li>
+        <li>Economiza horas de WhatsApp respondendo as mesmas perguntas individualmente</li>
+        <li>Momento ideal para pedir indicações: "Me indica 2–3 pessoas, você me ajuda a bater minha meta esse mês"</li>
+        <li>Já garante leads novos no mesmo atendimento</li>
+      </ul>
+      <div class="callout green">
+        <div class="callout-title">✅ Dica de Ouro</div>
+        <p>Use a reunião pós-serviço para colher indicações. O cliente está satisfeito (serviço finalizado), confiante (você passou as orientações), e receptivo. Nesse momento de gratidão, pedir 2–3 indicações é natural e quase sempre bem recebido.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TAB 5: LINHAS DE CRÉDITO ═══════════════ -->
+<section id="tab-credito" class="section">
+  <h2 class="section-title">Linhas de Crédito</h2>
+  <p class="section-desc">PRONAMP, FGI, cartão, financiamento — como orientar o cliente nos melhores créditos</p>
+
+  <div class="subsection">
+    <div class="subsection-label">PRONAMP — Capital de Giro para PJ</div>
+    <div class="card" style="border-color:var(--accent)">
+      <div class="tags"><span class="tag accent">PJ</span><span class="tag">CNPJ 12+ meses</span><span class="tag accent">~7% a.a.</span></div>
+      <h3 style="margin:10px 0">PRONAMP — Programa Nacional de Apoio às Médias Empresas</h3>
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--info);margin-bottom:8px">Critérios de acesso</h4>
+          <ul>
+            <li>CNPJ ativo há <strong>12+ meses</strong></li>
+            <li>Declaração de faturamento (emitir nota fiscal)</li>
+            <li>Impostos em dia (DAS, receita estadual)</li>
+            <li>Faturamento dos últimos 12 meses declarado</li>
+            <li>ECAC compartilhado com o banco</li>
+            <li>Contrato social</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Condições</h4>
+          <ul>
+            <li>Valor: <strong>até 30% do faturamento anual</strong></li>
+            <li>Teto: <strong>R$ 250.000</strong> (antes era R$150k)</li>
+            <li>Taxa: ~7% ao ano (juros subsidiados)</li>
+            <li>Carência: <strong>até 2 anos</strong> (não paga o principal)</li>
+            <li>Prazo total: 5+ anos</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout yellow" style="margin-top:12px">
+        <div class="callout-title">⚠ O Gerente Não Oferece — Você Deve Ir Buscar</div>
+        <p>O gerente não tem incentivo para oferecer PRONAMP (margem baixa pra ele). Oferecem crédito mais caro: capital de giro, crédito de frota. <strong>Bradesco e Santander:</strong> disponível direto no aplicativo da empresa. <strong>Itaú:</strong> também pelo app. <strong>Caixa e BB:</strong> precisa do gerente, mais burocrático.</p>
+      </div>
+      <div class="callout blue" style="margin-top:8px">
+        <div class="callout-title">ℹ Estratégia de faturamento</div>
+        <p>Se o faturamento atual não garante o valor desejado (máx 30%), o contador pode ajudar a "dar um gás" no faturamento retroativo dentro da realidade da empresa — pagando o imposto proporcional mas garantindo o valor de PRONAMP almejado. Os bancos privados aceitam declaração dos 12 meses assinada pelo contador.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">FGI (PEAC) — Fundo Garantidor para Capital de Giro</div>
+    <div class="card" style="border-color:var(--purple)">
+      <div class="tags"><span class="tag">PJ</span><span class="tag">Lote limitado</span><span class="tag accent">Teto R$5M</span></div>
+      <h3 style="margin:10px 0">FGI — Fundo Garantidor de Investimentos</h3>
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--purple);margin-bottom:8px">Características</h4>
+          <ul>
+            <li>Teto: <strong>R$ 5.000.000</strong></li>
+            <li>Liberado em <strong>lotes finitos</strong> pelo governo</li>
+            <li>Acaba rapidamente (grandes empresas pegam R$300M)</li>
+            <li>Não precisa de garantia (o fundo é a garantia)</li>
+            <li>Gerente pode negociar sem garantia adicional</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Acesso</h4>
+          <ul>
+            <li>Verificar disponibilidade no ECAC</li>
+            <li>Faturamento + documentação completa</li>
+            <li>Pode acumular com PRONAMP (se dentro dos limites)</li>
+            <li>Gerente pode fazer "defesa" para valores maiores</li>
+            <li>Visita do gerente à empresa pode aumentar o valor aprovado</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Financiamento habitacional</div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">Financiar Imóvel — O Que o Banco Analisa</h3>
+      <p>Para financiamento habitacional, o Bacen analisa o histórico completo de <strong>60 meses (5 anos)</strong>, não apenas 12 meses como no cartão. É a linha de crédito que mais exige limpeza profunda do histórico.</p>
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--info);margin-bottom:8px">Cálculo de aprovação</h4>
+          <div class="calc-box" style="font-size:.82rem">
+            <div class="calc-row"><span class="label" style="min-width:200px">Parcela máxima =</span><span class="val">Cap. pag. × 80%</span></div>
+            <div class="calc-row"><span class="label" style="min-width:200px">Valor do imóvel ≈</span><span class="val">Parcela ÷ 0,006</span></div>
+            <div class="calc-sep"></div>
+            <div style="font-size:.78rem;color:var(--fg3);margin-bottom:4px">Exemplo: renda R$20k:</div>
+            <div class="calc-row"><span class="label" style="min-width:200px">→ Cap. pagamento =</span><span class="val">R$10.000</span></div>
+            <div class="calc-row"><span class="label" style="min-width:200px">→ Parcela máx =</span><span class="val">R$8.000/mês</span></div>
+            <div class="calc-row"><span class="label" style="min-width:200px">→ Imóvel ≈</span><span class="val">R$1.300.000</span></div>
+          </div>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Melhores bancos para imóvel</h4>
+          <ul>
+            <li><strong>Caixa Econômica</strong> — melhor taxa, acesso ao FGTS, maior prazo</li>
+            <li>Itaú — boa tecnologia, processo ágil</li>
+            <li>Santander — alternativa para clientes com relacionamento</li>
+          </ul>
+          <h4 style="color:var(--warn);margin-bottom:8px;margin-top:12px">O que trava o financiamento</h4>
+          <ul>
+            <li>Contas abertas e esquecidas (pulverização)</li>
+            <li>Histórico de atraso nos últimos 5 anos</li>
+            <li>Renda presumida abaixo da real</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">PRONAMP / FGI / BNDES: requisitos completos e divergências entre aulas</div>
+    <div class="card">
+      <div class="callout red"><div class="callout-title">Divergência de valores entre aulas — confirme com o banco</div><p><strong>PRONAMP:</strong> aula 07 fala em 30% do faturamento dos últimos 12 meses com teto R$ 250 mil (antes R$ 150 mil); aulas 17, 24, 35 e 38 falam em "até 50% do faturamento anual, teto R$ 500 mil"; na prática "liberam 30–35% do faturamento" (R$ 1 milhão/ano → ~R$ 300 mil; "com muita sorte R$ 500 mil"). <strong>Juros:</strong> ~7% a.a. citado; um aluno achou "caro, 1,70% ao mês" em algumas condições. <strong>Carência:</strong> até 2 anos. Use sempre "de 30% a 50% do faturamento, teto de R$ 250 a R$ 500 mil, conforme banco e época".</p></div>
+      <div class="card-grid">
+        <div>
+          <h4 style="color:var(--info);margin-bottom:8px">Requisitos (aulas 07, 08, 17, 37, 38)</h4>
+          <ul>
+            <li>CNPJ <strong>12+ meses</strong> ativo e organizado</li>
+            <li><strong>Emite nota fiscal</strong> ("se não emite nota, no máximo cartão PJ")</li>
+            <li>Impostos em dia (DAS, receita estadual/federal)</li>
+            <li>Contrato social, faturamento dos últimos 12 meses, ECAC compartilhado com o gerente</li>
+            <li><strong>Todos os sócios com histórico limpo</strong> ("um sócio influencia o outro")</li>
+            <li>Rating PF e PJ bons; banco onde nunca teve problema (pente fino no Bacen)</li>
+            <li>Sem 1 ano de CNPJ alguns bancos aceitam <strong>capital social</strong>, mas exige relacionamento</li>
+            <li>Bancos privados aceitam declaração dos 12 meses assinada pelo contador; públicos pedem ECAC</li>
+            <li>Não existe faturamento mínimo; MEI e Ltda podem</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:var(--accent);margin-bottom:8px">Onde pedir</h4>
+          <ul>
+            <li><strong>Bradesco e Santander:</strong> pelo aplicativo Empresas, sem gerente</li>
+            <li><strong>Itaú:</strong> também pré-aprovado no app se tiver perfil</li>
+            <li><strong>Caixa, BB, Banestes:</strong> via gerente; mais burocráticos</li>
+            <li>O gerente quase nunca oferece PRONAMP/FGI ("não ganham em cima"): <strong>o cliente tem que procurar</strong>. Exceção: depende da cota por agência/cidade</li>
+            <li>No ECAC da PJ às vezes já aparece a sinalização do PRONAMP</li>
+            <li>PRONAMP + FGI podem ser pegos juntos conforme o faturamento</li>
+          </ul>
+        </div>
+      </div>
+      <ul>
+        <li><strong>FGI/PEAC:</strong> teto R$ 5 milhões; liberado em <strong>lotes finitos</strong> pelo governo (ex.: "daqui 28 dias o governo libera ~R$ 20 bi e acaba rápido"); um aluno liberou <strong>R$ 1,35 milhão a 0,67%</strong>, mas "pede muito tempo"; se o gerente não confia, pede garantia (aplicar 20–30% do valor).</li>
+        <li><strong>BNDES:</strong> nível PJ maior, conforme faturamento declarado (30–50%); "quer que você pague imposto". Bradesco, Itaú e Santander são melhores que Caixa/BB para capital de giro.</li>
+        <li><strong>Comitê e defesa:</strong> todo crédito PJ passa por comitê; o gerente é <strong>corresponsável</strong>, pode visitar a empresa e fazer "defesa" para valor maior ou sem garantia.</li>
+        <li><strong>Faturamento retroativo:</strong> um aluno pediu ao contador para "dar um gás" no faturamento retroativo pagando imposto proporcional. Os bancos estão atentos; use só dentro da realidade da empresa.</li>
+        <li><strong>Quem paga é a PF:</strong> dividendos isentos até ~R$ 50 mil/mês (mudança tributária citada); a capacidade de pagamento da PF importa.</li>
+        <li><strong>Alternativas para negócio grande (aula 08):</strong> MIEC/home equity (imóvel regularizado em garantia), capital de giro PJ, PRONAMP (carência de 2 anos), BNDES. <strong>Evite consignado</strong> (juros altíssimos).</li>
+        <li><strong>CPF primeiro (aulas 17, 37):</strong> o CPF do sócio trava o CNPJ. Rating do CPF antes; CNPJ depois, só se houver objetivo PRONAMP/capital de giro. O contador atualiza a Receita, <strong>não</strong> o rating bancário. Empresa nova: crie histórico, converse com o gerente em ~2 meses.</li>
+        <li><strong>Banco do Nordeste (FNE):</strong> consultar o Concentre antes economiza ~60 dias quando há restrição no Bacen; consulte todos os <strong>avalistas</strong> (até 5) no início (aula 08).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-label">Resumo por situação</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Necessidade do cliente</th><th>Produto recomendado</th><th>Banco indicado</th></tr></thead>
+        <tbody>
+          <tr><td>Cartão de crédito (primeiro)</td><td>Cartão via gerente</td><td>Santander ou Itaú</td></tr>
+          <tr><td>Cartão premium / alto limite</td><td>Bradesco Prime / Amex</td><td>Bradesco</td></tr>
+          <tr><td>Financiamento de carro</td><td>Via gerente / CDC</td><td>Santander, Itaú</td></tr>
+          <tr><td>Financiamento habitacional</td><td>SFH / FGTS</td><td>Caixa Econômica</td></tr>
+          <tr><td>Capital de giro PJ (pequeno)</td><td>PRONAMP</td><td>Bradesco ou Santander (app)</td></tr>
+          <tr><td>Capital de giro PJ (grande)</td><td>FGI / PEAC</td><td>Bradesco, Santander, Itaú</td></tr>
+          <tr><td>Sem histórico, recém-limpou</td><td>CDB + Cartão lastreado</td><td>Qualquer banco físico</td></tr>
+          <tr><td>Empresário com faturamento alto</td><td>PRONAMP + FGI</td><td>Bradesco ou Santander</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TAB 6: VENDAS ═══════════════ -->
+<section id="tab-vendas" class="section">
+  <h2 class="section-title">Casos Reais & Objeções</h2>
+  <p class="section-desc">O roteiro completo de vendas, objeções e demonstrações das 40 aulas</p>
+
+  <div class="subsection">
+    <div class="subsection-label">Roteiro de vendas — Padrão do curso</div>
+    <div class="card">
+      <h3 style="margin-bottom:14px">Script em 8 Etapas (20–30 minutos)</h3>
+      <ol class="steps">
+        <li>
+          <strong>Quebra-gelo (3 min)</strong>
+          "Você fala de onde?" / "O que te trouxe aqui?" / "Já ouviu falar de rating bancário?" — Identificar origem, construir rapport rapidamente.
+        </li>
+        <li>
+          <strong>Apresentação do relatório ao vivo (7–10 min)</strong>
+          Mostrar a tela do relatório durante a ligação. Ir linha a linha: classificação → renda presumida → dados → birôs → Bacen → histórico de consultas. Perguntar: "Você mora nesse endereço?" → "Esse e-mail é seu?" → cliente percebe o problema sozinho.
+        </li>
+        <li>
+          <strong>Usar analogias (2 min)</strong>
+          "Você tem uma Ferrari, mas o banco enxerga como carro popular — a gente vai colocar a placa certa." / "Para o banco, você é como um adolescente de 18 anos — desconhecido, sem histórico."
+        </li>
+        <li>
+          <strong>Explicar o processo (3–5 min)</strong>
+          45 dias de compliance + jurídico. Aguardar dia 20 do Bacen. Janela de 90 dias. Portal do cliente para acompanhamento em tempo real.
+        </li>
+        <li>
+          <strong>Recomendações dos 90 dias (2 min)</strong>
+          Não atrasar nada. Não usar cheque especial. Não fazer novas consultas. Não aceitar a primeira oferta que o banco liberar.
+        </li>
+        <li>
+          <strong>Cálculo da capacidade (2 min)</strong>
+          Mostrar ao cliente quanto de crédito ele pode ter com a renda correta: "Com sua renda de R$X, você teria capacidade de R$Y, cartão até R$Z, financiamento de imóvel até R$W."
+        </li>
+        <li>
+          <strong>Apresentar as opções (2 min)</strong>
+          Sempre apresentar as duas opções (à vista e parcelado). Não escolher por ele. "Qual das duas faz mais sentido para você hoje?"
+        </li>
+        <li>
+          <strong>Fechamento (2–3 min)</strong>
+          "Faz sentido para você dar entrada hoje?" Se não pode pagar hoje: pedir sinal simbólico — "Me dá qualquer valor para eu registrar o desconto no sistema para você."
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Scripts de objeção — Respostas prontas</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Objeção</th><th>Resposta</th></tr></thead>
+        <tbody>
+          <tr><td>"Vou pensar"</td><td>"Essa proposta só é válida nessa ligação. Se você retornar, a gente faz uma nova proposta sem o desconto. O que te impede de decidir agora?"</td></tr>
+          <tr><td>"Não tenho dinheiro agora"</td><td>"Sem problema. Me dá qualquer valor de sinal para eu registrar o desconto no sistema. O restante você paga quando receber — pode ser no dia 5, pode ser semana que vem."</td></tr>
+          <tr><td>"Já paguei outras empresas, não deu certo"</td><td>"Entendo, e por isso eu quero te mostrar a diferença: a gente tem um portal onde você acompanha cada etapa em tempo real. Total transparência. Nada de sumir com seu dinheiro."</td></tr>
+          <tr><td>"Quanto tempo leva?"</td><td>"45 dias para o processo ficar pronto, mais a espera do dia 20 do Banco Central. Em torno de 60 dias total. Depois, 90 dias de comportamento. Mas já desde os primeiros dias você começa a ver resultados."</td></tr>
+          <tr><td>"O banco vai me aprovar com certeza?"</td><td>"Eu não posso garantir o banco — isso depende deles. O que posso garantir é o processo. E enquanto você não tiver sua primeira aprovação, a gente fica junto no pós-venda."</td></tr>
+          <tr><td>"Mas meu score está 900!"</td><td>"Exatamente — esse é o ponto. Score é para crediário. Os bancos usam o rating bancário, que é diferente. E aqui está o relatório mostrando o que o banco realmente enxerga quando consulta o seu CPF."</td></tr>
+          <tr><td>"Não tenho dívida, por que nego?"</td><td>Mostrar o relatório ao vivo — a divergência de dados é visível. "Olha aqui — você tem 14 telefones no sistema. Qual desses é o seu? O banco também não sabe."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Técnica do sinal — Nunca deixar o cliente "pensar"</div>
+    <div class="card" style="border-color:var(--accent)">
+      <h3 style="margin-bottom:10px">Por que pedir sinal funciona</h3>
+      <p>O cliente que diz "vou pensar e te ligo" <strong>quase nunca liga</strong>. A decisão precisa acontecer na ligação. O sinal é o mecanismo:</p>
+      <div class="script-box">
+        <div class="script-line consultor">
+          <div class="script-label">Consultor</div>
+          "Olha, o desconto que eu te ofereço aqui de R$3.990 por R$1.980 — esse preço só é válido enquanto a gente está na ligação. O financeiro é o de menos agora, preciso de um sinal para eu registrar o acordo no sistema. Pode ser qualquer valor."
+        </div>
+        <div class="script-line cliente">
+          <div class="script-label">Cliente — Objeção</div>
+          "Mas eu só recebo dia 5..."
+        </div>
+        <div class="script-line consultor">
+          <div class="script-label">Consultor</div>
+          "Sem problema. Me dá um sinal hoje — R$100, R$200, o que você conseguir. Eu anoto o acordo, e o restante você paga no dia 5 ou quando estiver mais tranquilo. O importante é a gente travar o desconto agora."
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-title">Caso Real — Aula 18 (Albert, Natal-RN)</div>
+        <div class="case-meta"><span>Renda: R$22k</span><span>Banco atual: Nubank</span></div>
+        <div class="case-body">Cliente não podia pagar o valor total naquele dia (recebia só dia 5). Consultor pediu sinal simbólico. Cliente foi buscar um amigo que adiantou o valor e fechou ainda naquela ligação. Resultado: venda convertida que teria sido perdida sem a técnica do sinal.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Perfis — Para quem vender e para quem NÃO vender</div>
+    <div class="card-grid">
+      <div class="card-sm" style="border-color:var(--accent)">
+        <h4 style="color:var(--accent);margin-bottom:10px">✅ Perfis Ideais</h4>
+        <ul>
+          <li>Renda R$10–30k mas travado no sistema</li>
+          <li>Empresário com movimentação alta e renda subrepresentada</li>
+          <li>Recém-limpou o nome mas ainda sem crédito</li>
+          <li>Score alto mas sem crédito (divergência típica)</li>
+          <li>Quer financiar imóvel ou carro mas reprova</li>
+          <li>CLT mas banco não enxerga a renda real</li>
+        </ul>
+      </div>
+      <div class="card-sm" style="border-color:var(--danger)">
+        <h4 style="color:var(--danger);margin-bottom:10px">❌ NÃO Atender</h4>
+        <ul>
+          <li>Nome sujo (pendências ativas no Serasa)</li>
+          <li>Renegociou dívida com o banco indicado (trava interna)</li>
+          <li>Sem nenhuma renda para comprovar</li>
+          <li>Renda muito baixa (capacidade de pagamento &lt; R$2k)</li>
+          <li>Clientes do limpa-nome (perfil diferente — mau pagador)</li>
+          <li>Empresa aberta há menos de 12 meses (PRONAMP não disponível)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout yellow">
+      <div class="callout-title">⚠ Limpa-nome vs. Rating Bancário — NÃO misturar</div>
+      <p>São dois serviços completamente diferentes com públicos diferentes. <strong>Cliente do limpa-nome:</strong> tem dívida, mau pagador histórico, vai dar dor de cabeça, não tem cartão para pagar o serviço. <strong>Cliente do rating:</strong> nome limpo, tem cartão, precificar melhor, maior chance de conseguir crédito, mais satisfeito no final = mais indicações. Misturar os dois públicos destrói a operação.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Casos reais das 40 aulas — Resumo por perfil</div>
+
+    <details>
+      <summary>Aulas 01–06 — Fundamentos com demonstração ao vivo</summary>
+      <div class="detail-body">
+        <div class="case">
+          <div class="case-title">Aula 02 — Marcel (Promissão-SP)</div>
+          <div class="case-meta"><span>Score ~800</span><span>Nome limpo</span><span>Sem crédito</span></div>
+          <div class="case-body">Score alto, nome limpo, 4 telefones, 3 e-mails, 3 endereços. MEI no nome. Capacidade de pagamento zerada por comprometimento acima de 35%. Diagnóstico: 100% divergência de dados. Lição: Score ≠ crédito aprovado.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 05 — João Flávio (caminhoneiro, Roraima)</div>
+          <div class="case-meta"><span>Usando C6</span><span>Renda presumida R$15k (real R$30–40k)</span></div>
+          <div class="case-body">Banco errado (C6 digital). Renda presumida pela metade. Comprometimento 100%. Duas empresas no CNPJ. Pendências ativas no Serasa. Regra: nunca iniciar com pendências ativas. Recomendado Santander ou Itaú.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 06 — Leandro (feirante, Campinas-SP)</div>
+          <div class="case-meta"><span>Movimenta R$26–30k/mês no PagBank</span><span>Renda no Bacen: R$6k</span></div>
+          <div class="case-body">Toda movimentação no PagBank (banco digital). Meta: ajustar renda presumida para R$30k. 11 consultas nos últimos 12 meses. Banco recomendado: Santander. Cálculo demonstrado: R$30k → cartão R$45k → financiamento parcela R$12k → imóvel ~R$700k.</div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Aulas 08–09 — Análise de Consultas e SCR</summary>
+      <div class="detail-body">
+        <div class="case">
+          <div class="case-title">Aula 08 — Gabriel (funcionário Bradesco)</div>
+          <div class="case-meta"><span>Apontamentos Bacen de 2022</span><span>Dívidas já pagas</span></div>
+          <div class="case-body">Banco do Brasil, Caixa, Itaú, Unibanco: apontamentos de 2022, Gabriel já pagou. Banco não removeu. Lição crucial: dívida paga ≠ apontamento removido. Processo: reclamação administrativa → ação judicial. Em muitos casos gera indenização.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 09 — Ramon (marketing digital, Cicobi)</div>
+          <div class="case-meta"><span>R$350k/ano declarado PJ</span><span>9 contas encerradas</span></div>
+          <div class="case-body">Encerrou 9 contas (acelerou rating). CCS demora para atualizar após encerramento. Estratégia: foco em 1–2 bancos máximo. Levar IR (PF + PJ) + extrato ao banco. Não pedir crédito na abertura. Depois de 60 dias de relacionamento: conversar com gerente.</div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Aulas 13–20 — Demos de Venda Completas</summary>
+      <div class="detail-body">
+        <div class="case">
+          <div class="case-title">Aula 13 — William (BH) com Ione</div>
+          <div class="case-meta"><span>Renda CLT R$10–12k</span><span>14+ telefones no sistema</span></div>
+          <div class="case-body">Nome limpo há 8 meses, sem crédito. Renda zerada no Bacen (divergência). Extrato não aceito mais para renda — só IR. O Itaú liberou financiamento de carro mas não aumenta cartão — sinal claro de divergência. Tática: ler relatório junto → "diagnóstico que vende sozinho".</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 14 — Eduardo (Balneário Camboriú) com Ericles</div>
+          <div class="case-meta"><span>Empresário, R$65k/mês</span><span>Sem nenhum cartão</span></div>
+          <div class="case-body">Santander: score interno de 0–10, precisa de 7+. Histórico de parcelas atrasadas no passado (moto com irmão). Cliente era vendedor experiente — negociou de R$4.990 até R$1.900. Consultor aceitou: "Uma venda menor é melhor do que nenhuma."</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 16 — Empresário Santander Select (Wesley)</div>
+          <div class="case-meta"><span>R$120k PF + R$100k PJ/mês</span><span>Nunca teve cartão</span></div>
+          <div class="case-body">Rating BBB, renda presumida zerada, 8 telefones, 2 e-mails, 9 endereços. Roteiro de 25 minutos: quebra-gelo → relatório → birôs → Bacen → consultas → resumo → prazo → fechamento. Demonstração de como fazer diagnóstico ultra-rápido e eficiente.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 17 — Matheus (marketing, São Paulo) com Vinícius</div>
+          <div class="case-meta"><span>Rating AAA</span><span>Sem crédito</span></div>
+          <div class="case-body">Rating máximo mas endereço desatualizado há anos. Lição: até quem tem AAA pode estar bloqueado. Os 3 motivos: dívida ativa + divergência de dados + comportamento inadequado. PRONAMP PJ explicado: 50% do faturamento anual, teto R$500k, ~7% a.a., 2 anos de carência.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 20 — Nelson (Vitória da Conquista-BA)</div>
+          <div class="case-meta"><span>Porteiro + empreiteiro: R$5.5k real, R$2.5k declarado</span></div>
+          <div class="case-body">Script ultra-rápido em 15 minutos. Roteiro: "O banco te vê assim..." → analogia Ferrari/Fusca → "Dois meses para resolver" → "Faz sentido hoje?" Preços: R$3.990 → R$2k (4× R$500) ou R$1.500 à vista.</div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Aulas 24–31 — Empresários e Casos Complexos</summary>
+      <div class="detail-body">
+        <div class="case">
+          <div class="case-title">Aula 24 — Empresário com R$500k movimentação/mês</div>
+          <div class="case-meta"><span>Itaú: R$100k limite/dia</span><span>Renda no banco: R$8k</span></div>
+          <div class="case-body">Banco enxerga só R$8k de renda apesar de movimentar R$500k/mês. Itaú: "banco quadrado, segue rating à risca." C6: mais liberal mas digital. R$26k em vencidos no Bacen (precisa negociar ANTES). PRONAMP PJ: 50% faturamento, teto R$500k, 12+ meses CNPJ, declarar faturamento. Programa de indicação: 20% do contrato.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 31 — Moisés (Euclides da Cunha-BA, mecânico)</div>
+          <div class="case-meta"><span>Rating BBB</span><span>Renda Bacen: R$1.600 (real: R$10–15k)</span></div>
+          <div class="case-body">5 endereços (nenhum atual), 3 e-mails (nenhum atual). Santander Select recomendado. Colocava carro e financiamento no nome da esposa por falta de crédito. Processo completo apresentado: compliance 45 dias → Bacen dia 20 → 90 dias de comportamento → primeira solicitação → se aprovado: sucesso; se não: aguardar mais 90 dias. Recomendações extras: bloquear score no Serasa Premium (R$23/mês) pelos 90 dias.</div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Aulas 33–39 — Casos Especiais e Situações Complexas</summary>
+      <div class="detail-body">
+        <div class="case">
+          <div class="case-title">Aula 33 — Contas paradas para financiamento habitacional</div>
+          <div class="case-body">Contas abertas e esquecidas = "pulverização de dados". Financiamento habitacional é o crédito que mais exige limpeza — 5 anos de histórico no Bacen. Estratégia específica: encerrar tudo que não usa antes de pedir financiamento.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 36 — Cliente sem pressa — como criar urgência</div>
+          <div class="case-body">Script para quem "não precisa de crédito agora": mostrar o que ele NÃO vai conseguir fazer no futuro. Casa própria em 2 anos? Vai precisar de histórico limpo HOJE. Capital de giro para expandir? PRONAMP exige 12 meses de CNPJ. O melhor momento para resolver era ontem; o segundo melhor é hoje.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 37 — CPF do sócio bloqueando o CNPJ</div>
+          <div class="case-body">Rating do CPF do sócio impacta diretamente o CNPJ para PRONAMP e capital de giro. Estratégia: fazer o rating do CPF primeiro, depois do CNPJ. Empresa nova travada pelo histórico pessoal do sócio.</div>
+        </div>
+        <div class="case">
+          <div class="case-title">Aula 39 — Dívidas em vários bancos + contas encerradas</div>
+          <div class="case-body">Estratégia de priorização de pagamento: quais pagar primeiro (os que têm apontamento no Bacen), quais negociar. Encerramento de contas: impacto no CCS (Cadastro de Clientes do Sistema Financeiro) e tempo de atualização.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">As 10 Regras de Ouro</div>
+    <div class="rule-grid">
+      <div class="rule-item">
+        <div class="rule-icon red">1</div>
+        <div class="rule-text"><strong>Nunca fechar com nome sujo</strong> Pendências ativas impedem o serviço de ter resultado.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">2</div>
+        <div class="rule-text"><strong>Banco digital não serve</strong> Cliente precisa de banco físico privado com gerente.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">3</div>
+        <div class="rule-text"><strong>Open Finance = NÃO</strong> Compartilha dados negativos com todos automaticamente.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon red">4</div>
+        <div class="rule-text"><strong>Cheque especial = NÃO</strong> Cria trava interna e é visível para todos os bancos.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon yellow">5</div>
+        <div class="rule-text"><strong>Score não importa para banco</strong> Apenas para crediário/lojas. Bancos usam o rating.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon yellow">6</div>
+        <div class="rule-text"><strong>Nunca aceitar primeira oferta</strong> Banco começa baixo para testar. Recusar = mais limite na próxima.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon yellow">7</div>
+        <div class="rule-text"><strong>90 dias entre solicitações</strong> Banco avalia a cada 90 dias. Não queimar consultas.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon green">8</div>
+        <div class="rule-text"><strong>Manter dados por 12 meses</strong> Mesmo endereço, e-mail, telefone definidos no processo.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon green">9</div>
+        <div class="rule-text"><strong>Dinheiro dorme na virada</strong> Estado de flow: saldo positivo no dia 30→1 é o que o banco mede.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon green">10</div>
+        <div class="rule-text"><strong>Gerente é o caminho</strong> Todos os limites altos foram arrumados pelo gerente, não pelo app.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TAB: PREÇOS & GANHOS ═══════════════ -->
+<section id="tab-precos" class="section">
+  <h2 class="section-title">Preços, Negociação & Ganhos</h2>
+  <p class="section-desc">Quanto cobrar, até onde descer, quanto sobra no seu bolso e quais serviços extras vender. Tudo tirado das calls reais das aulas.</p>
+
+  <div class="subsection">
+    <div class="subsection-label">A tabela padrão (usada em quase todas as calls)</div>
+    <div class="card-grid">
+      <div class="card-sm"><h4>Valor cheio (âncora)</h4><div style="font-size:1.9rem;font-weight:700;color:var(--fg)">R$ 3.990</div><p style="font-size:.85rem">Sempre falado primeiro. Nunca é o preço que o cliente paga na ligação — serve para o desconto parecer real.</p></div>
+      <div class="card-sm" style="border-color:var(--warn)"><h4 style="color:var(--warn)">Parcelado</h4><div style="font-size:1.9rem;font-weight:700;color:var(--warn)">R$ 2.790</div><p style="font-size:.85rem"><strong>R$ 1.200 de desconto.</strong> 3× R$ 930 no boleto/Pix (entrada hoje + 30 e 60 dias) ou até 10× sem juros no cartão.</p></div>
+      <div class="card-sm" style="border-color:var(--accent)"><h4 style="color:var(--accent)">À vista</h4><div style="font-size:1.9rem;font-weight:700;color:var(--accent)">R$ 1.980</div><p style="font-size:.85rem">Quase <strong>50% de desconto</strong> sobre o cheio. Pix na hora. É o preço que o consultor quer fechar.</p></div>
+    </div>
+    <div class="callout green">
+      <div class="callout-title">Frase exata usada (aulas 13, 16, 17, 19, 23, 31)</div>
+      <p>"O serviço de rating tem um valor total de R$ 3.990. Só que <strong>durante essa ligação</strong> você tem duas opções de desconto. Se for parcelado, você ganha R$ 1.200 de desconto e fica R$ 2.790, em três boletos de R$ 930. Se for à vista, o desconto é ainda maior: fica R$ 1.980. Você acha que faz mais sentido à vista ou parcelado?"</p>
+    </div>
+    <div class="callout blue">
+      <div class="callout-title">Por que funciona</div>
+      <p>1) O cliente escolhe entre <strong>duas formas de pagar</strong>, não entre comprar ou não comprar. 2) O desconto só vale <strong>"durante essa ligação"</strong>: cria prazo. 3) A justificativa é honesta e simples: "eu valorizo o meu tempo e o seu, para não precisar marcar outra reunião".</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Escada de negociação — o que foi aceito nas aulas</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Aula</th><th>Situação</th><th>Tabela</th><th>Fechou em</th></tr></thead>
+        <tbody>
+          <tr><td>13</td><td>CLT, renda zerada, quer pagar à vista</td><td>3.980 / 2.780 / 1.980</td><td><strong>R$ 1.980</strong> à vista (ou 3× R$ 930)</td></tr>
+          <tr><td>14</td><td>Empresário R$ 65k/mês, também é vendedor</td><td>Cheio 4.990 · 3× 3.500 · à vista 2.300</td><td><strong>R$ 1.900</strong> no Pix na hora (cliente propôs, fechou para não perder a venda)</td></tr>
+          <tr><td>15</td><td>Dono de empresa, quer Pix em 2×</td><td>3.990 / 2.790 / 1.980</td><td><strong>R$ 2.500 em 2× R$ 1.250</strong> (10% a menos que 2.790), sinal de R$ 250 hoje, R$ 1.000 na sexta (dia 18)</td></tr>
+          <tr><td>16</td><td>Empresário de Belém, R$ 100k+/mês</td><td>3.990 / 2.790 / à vista 2.200</td><td>3× R$ 930 no boleto</td></tr>
+          <tr><td>17</td><td>AAA travado, marketing SP</td><td>3.990 / 2.790 / 1.980</td><td>Apresentou as 3 opções; cliente seguiu para mandar dados e comprovante</td></tr>
+          <tr><td>18</td><td>Natal, só recebe dia 5</td><td>3.990 / 2.790 / 1.980</td><td>Quer à vista, só recebe dia 5: consultor <strong>pede sinal para segurar</strong>; cliente vai tentar adiantamento com um amigo</td></tr>
+          <tr><td>19</td><td>Barbeiro MEI, com pressa</td><td>3.990 / 2.790 / 1.980</td><td>Parcelado: <strong>R$ 200 sinal hoje</strong> + R$ 730 na terça + 2 parcelas (17/10 e 17/11)</td></tr>
+          <tr><td>20</td><td>Porteiro + empreiteiro, rating B</td><td>3.990 → 50% parcelado: 4× R$ 500 · à vista 1.500</td><td><strong>R$ 1.500</strong> à vista (ficou de pagar à tarde)</td></tr>
+          <tr><td>21</td><td>Santander Select, cliente com contador</td><td>3.990 → 2.990 → à vista 1.990</td><td>3× R$ 1.000 (entrada, 30, 60 dias)</td></tr>
+          <tr><td>24</td><td>Empresário, movimenta R$ 526k em 30 dias</td><td>3.990 / 2.790</td><td><strong>R$ 2.500 em 3× R$ 833</strong> (cliente pediu 15% de desconto no parcelado)</td></tr>
+          <tr><td>25</td><td>Renda R$ 9k, "anos tentando financiar"</td><td>Normal 2.790 → promo <strong>2.370</strong> (3× R$ 790) · à vista 1.980</td><td>Preferiu à vista (R$ 1.980); sinal de R$ 200 no Pix na hora e restante no dia seguinte</td></tr>
+          <tr><td>35/37</td><td>Consultor de Floripa (mesmo produto)</td><td>À vista <strong>1.700</strong> · a prazo 2.550 (entrada + 2× 850)</td><td>Casal: <strong>R$ 1.200 por CPF</strong> (marido + esposa) no Pix</td></tr>
+          <tr><td>29/30/31</td><td>Caminhoneiro, autônomo, mecânico</td><td>3.990 / 2.790 / 1.980</td><td>Sinal de R$ 300–500 hoje, restante em 30/60 dias</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout yellow">
+      <div class="callout-title">Leitura prática dessa tabela</div>
+      <p>O <strong>piso real</strong> das calls fica entre <strong>R$ 1.500 e R$ 1.980 à vista</strong> e entre <strong>R$ 2.500 e R$ 2.790 parcelado</strong>. Descer abaixo disso só apareceu com cliente que negocia muito (aula 14) ou casal com dois CPFs (aula 37). Regra implícita: <strong>quanto mais fácil o pagamento (à vista, Pix, sinal na hora), mais desconto; quanto mais parcelado, menos desconto</strong>.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Como baixar o preço sem perder o controle</div>
+    <ol class="steps">
+      <li><strong>Não baixe antes de ele pedir.</strong> Primeiro as duas opções (2.790 / 1.980). Muitos fecham aí (aulas 13, 16, 17, 31).</li>
+      <li><strong>Se pedir desconto no parcelado</strong>, ceda pouco e em troca de algo: "Se você dá R$ 250 de sinal hoje, eu faço 2× de R$ 1.250" (aula 15). Desconto sempre em troca de sinal ou de pagar mais rápido.</li>
+      <li><strong>Se pedir "melhora esse valor"</strong>, mostre que já tem R$ 1.200 de desconto e peça o fechamento: "Você consegue botar uns 15% de desconto? Já fecho." → "Faço 2.500 em 3 de R$ 833. Fechado?" (aula 24).</li>
+      <li><strong>Se disser que só tem X</strong> (aula 14: "consigo R$ 1.900 no Pix agora"), decida na hora: uma venda menor fecha hoje, o "volta depois" quase nunca volta.</li>
+      <li><strong>Nunca aceite a promessa de pagar depois da reunião sem sinal.</strong> Cliente que "faz o Pix depois" some (aula 14: "quando o cliente quer pagar fora da reunião, nunca mais aparece").</li>
+    </ol>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Quanto sobra no seu bolso (conta simples)</div>
+    <div class="card">
+      <h3 style="margin-bottom:10px">Margem por venda</h3>
+      <div class="calc-box">
+        <div class="calc-row"><span class="label">Venda à vista (padrão) =</span><span class="val">R$ 1.980</span></div>
+        <div class="calc-row"><span class="label">− Equipe de compliance (por cliente) =</span><span class="val">R$ 350 (R$ 300 se mais de 10 nomes/mês)</span></div>
+        <div class="calc-row"><span class="label">− Consulta no sistema (Concentre) =</span><span class="val">~R$ 99 a R$ 179</span></div>
+        <div class="calc-sep"></div>
+        <div class="calc-row"><span class="label">Sobra por venda à vista ≈</span><span class="val">R$ 1.450 a R$ 1.530</span></div>
+        <div class="calc-row"><span class="label">Sobra por venda parcelada (R$ 2.790) ≈</span><span class="val">R$ 2.260 a R$ 2.340</span></div>
+      </div>
+      <p style="font-size:.8rem;color:var(--fg3);margin-top:10px">Cálculo feito a partir dos valores citados nas aulas (compliance R$ 350/R$ 300 na aula 01; consulta R$ 99–179 no sistema). Não considera anúncio, tempo, impostos ou taxa de cartão. Confira os custos atuais com a mentoria.</p>
+    </div>
+    <div class="callout blue">
+      <div class="callout-title">Resultados que o instrutor cita de alunos (aula 01)</div>
+      <p>"Aluno nosso fez <strong>R$ 24 mil em um dia</strong>. Aluno que fez <strong>R$ 300 mil no mês</strong> de venda de rating. Outros passaram de <strong>R$ 100 mil em 30 dias</strong>. A margem de lucro é absurda." São números do vendedor do curso, não garantia: dependem de volume de leads e de fechar na call.</p>
+    </div>
+    <div class="callout green">
+      <div class="callout-title">Equipe própria vs. compliance terceirizado</div>
+      <p>Nas calls os consultores falam em "minha equipe trabalha 45 dias". Quem não tem equipe usa o compliance do Consultor 360 (R$ 350 por cliente, R$ 300 a partir de 10 clientes/mês). Fazer na mão no site do Serasa é "um processo demorado".</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Outras fontes de receita citadas</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Serviço</th><th>Valor citado</th><th>Quando vender</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Indicação (comissão paga ao cliente)</strong></td><td>20% do contrato (≈ R$ 396 sobre 1.980 · R$ 558 sobre 2.790)</td><td>Fim da call de fechamento (aulas 24, 25): "se você indicar 5 pessoas seu serviço já está pago"</td></tr>
+          <tr><td><strong>Remoção de apontamentos no Bacen (jurídico)</strong></td><td>R$ 2.500 à vista ou R$ 3.000 a prazo (aula 38) · a aula 10 cita R$ 750 por CPF/CNPJ</td><td>~20 dias após o rating, quando o SCR mostra apontamentos antigos pagos</td></tr>
+          <tr><td><strong>Raio-X / consulta paga pelo cliente</strong></td><td>R$ 90 (aula 35)</td><td>Porta de entrada: o cliente paga a consulta e já chega qualificado</td></tr>
+          <tr><td><strong>Rating do CNPJ</strong></td><td>Cobrado à parte (mesma lógica)</td><td>Só se o cliente quer PRONAMP/capital de giro e o CNPJ tem 12+ meses</td></tr>
+          <tr><td><strong>Limpa-nome</strong></td><td>Reprotocolo R$ 247 (associação cobra ~R$ 70 do consultor)</td><td>Só para quem pede, fazendo o serviço <strong>depois</strong> de pago por inteiro, nunca junto com rating</td></tr>
+          <tr><td><strong>Upsell de consultoria</strong></td><td>Consórcio, alavancagem de patrimônio, investimento (aula 31)</td><td>Depois do rating: "tudo começa pelo rating, se a estrutura do CPF não estiver certa o resto trava"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Formas de pagamento aceitas</div>
+    <div class="card-grid">
+      <div class="card-sm"><h4>Pix à vista</h4><p style="font-size:.85rem">Melhor preço. Cliente paga durante a call; você manda a chave Pix junto com o link do formulário de dados.</p></div>
+      <div class="card-sm"><h4>Boleto/Pix em 3×</h4><p style="font-size:.85rem">Entrada hoje, depois 30 e 60 dias; o cliente escolhe as datas "a partir do mês que vem". Em alguns fechamentos: 4× R$ 500, 2× R$ 1.250, 3× R$ 1.000.</p></div>
+      <div class="card-sm"><h4>Cartão até 10×</h4><p style="font-size:.85rem">Sem juros nos R$ 2.790. Quem não tem cartão (cliente de crédito travado) fica no boleto; avise que a taxa de maquininha é custo seu.</p></div>
+    </div>
+    <div class="callout red">
+      <div class="callout-title">Quando o serviço começa</div>
+      <p>Nas calls, o serviço <strong>só inicia depois do sinal/pagamento + contrato assinado + dados preenchidos</strong>. Cliente da aula 22 perguntou "só começa depois do pagamento integral?" — a resposta do consultor foi: "primeiro pagamento, pode emitir o boleto". Se o cliente some depois do sinal, o sinal fica com você ("se você sumir, sobe os meus mil", aula 21).</p>
+    </div>
+  </div>
+</section>
+<!-- ═══════════════ TAB: SCRIPTS DETALHADOS ═══════════════ -->
+<section id="tab-scripts" class="section">
+  <h2 class="section-title">Scripts Detalhados — A Call Inteira, Passo a Passo</h2>
+  <p class="section-desc">Cada etapa da venda com as falas reais das aulas 13 a 25, o motivo de cada uma funcionar e o erro que ela evita. Abra cada bloco.</p>
+
+  <div class="callout blue">
+    <div class="callout-title">Estrutura da call (25 a 30 min)</div>
+    <p><strong>1.</strong> Abertura e dor (3 min) → <strong>2.</strong> Qualificação (2) → <strong>3.</strong> Relatório na tela (8–10) → <strong>4.</strong> Analogia (1) → <strong>5.</strong> Processo e prazo (3) → <strong>6.</strong> Regras dos 90 dias (2) → <strong>7.</strong> Preço (2) → <strong>8.</strong> Sinal e dados (3) → <strong>9.</strong> Indicação (1). A aula 20 comprova que dá para fazer tudo em 15 minutos.</p>
+  </div>
+
+  <details open>
+    <summary>1. Abertura: criar conexão e descobrir a dor</summary>
+    <div class="detail-body">
+      <div class="script-box">
+        <div class="script-line consultor"><div class="script-label">Consultor</div>"Bom dia! Você fala de onde?" — "Já conhece Goiânia?" (aulas 13, 16, 18, 20: 1 a 2 minutos de papo local; ninguém pula isso)</div>
+        <div class="script-line consultor"><div class="script-label">Consultor</div>"Me conta, <strong>o que te motivou a fazer o raio-x? Qual é o seu objetivo hoje?</strong>" (aulas 13, 14, 16, 25)</div>
+        <div class="script-line cliente"><div class="script-label">Cliente (exemplos reais)</div>"Limpei o nome faz 8 meses e não consigo crédito" · "Movimento R$ 65 mil e não tenho nenhum cartão" · "Anos tentando financiar, nunca aprovam"</div>
+        <div class="script-line consultor"><div class="script-label">Consultor — complemento (aula 14)</div>"Está buscando cartão de crédito? Empréstimo? O que está acontecendo que levou você a fazer o diagnóstico?"</div>
+      </div>
+      <p><strong>Por que funciona:</strong> o cliente descreve o próprio problema em voz alta; depois você só devolve o que ele disse ("você falou que o Itaú libera carro mas não cartão: vamos ver por quê"). <strong>Erro a evitar:</strong> começar explicando o produto antes de ouvir.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>2. Qualificação: só mostrar o preço para quem pode fechar</summary>
+    <div class="detail-body">
+      <div class="script-box">
+        <div class="script-line consultor"><div class="script-label">Consultor (aula 15)</div>"Por isso eu te perguntei da dívida. Se fosse uma dívida real, <strong>eu não poderia jamais fazer seu rating, porque a dívida ia te travar acima de qualquer coisa.</strong> A gente só faz o serviço para gerar resultado."</div>
+        <div class="script-line consultor"><div class="script-label">Consultor (aula 19)</div>"Se você tivesse dívida aqui eu não poderia te ajudar. Não adianta eu tirar as travas se a pessoa deve. Prefiro nem fazer, porque não tem resultado."</div>
+        <div class="script-line consultor"><div class="script-label">Consultor — banco errado (aula 15)</div>"Você já teve dívida no Bradesco? Então vai ter que mudar de banco. <strong>Ou você quer crédito, ou muda de banco.</strong> Eu não vou te vender milagre."</div>
+        <div class="script-line consultor"><div class="script-label">Consultor — por que a trava no mesmo banco (aula 15)</div>"Em 95% dos casos a restrição fica no banco por no mínimo 3 anos. Se a negociação teve desconto, 100% de certeza que você não consegue mais nada lá. É como o seu cliente do Mercado Livre que te deve R$ 100 mil e paga R$ 20: você nunca mais quer fechar negócio com ele. O banco faz igual."</div>
+      </div>
+      <p><strong>Perguntas de qualificação usadas:</strong> tem dívida ativa? qual banco principal? já teve dívida/negociação nesse banco? quanto movimenta? tem imposto de renda declarado? tem cartão hoje? quer crédito para quê (cartão, carro, casa, capital de giro)?</p>
+      <p><strong>Por que funciona:</strong> recusar quem tem dívida passa honestidade e aumenta o valor do que você vende. Na aula 31 o consultor diz: "a gente não pega esse perfil enquanto tiver pendência".</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>3. Apresentar o relatório: a ordem das telas e a frase de cada uma</summary>
+    <div class="detail-body">
+      <p>Compartilhe a tela. Peça o CPF para conferir e vá linha a linha. Ordem usada em todas as aulas:</p>
+      <ol class="steps">
+        <li><strong>Classificação (AAA a C−)</strong>
+          "Esse é o rating bancário comercial, a classificação em que <strong>todos os bancos te avaliam</strong> quando você pede crédito. Hoje você está em BBB, considerado risco."
+          <br><em>Se estiver em B sem dívida:</em> "B é a pior nota para quem não tem dívida; C é de quem deve." (aula 20)
+          <br><em>Se estiver em AAA:</em> "Letra não é tudo. Você está em AAA e mesmo assim não consegue crédito, então algo está travando." (aulas 17, 25)</li>
+        <li><strong>Renda presumida e capacidade de pagamento</strong>
+          "O banco enxerga que você ganha R$ 6.500. Hoje, qual é a sua renda?" (cliente diz 12 mil) → "O sistema financeiro enxerga <strong>metade do seu tamanho</strong>. Com 12 mil você é cliente de qualquer banco. O banco está doido atrás de você, só que ele não sabe que você existe." (aula 19)
+          <br>Calcule na hora: "Renda presumida ÷ 2 = capacidade. Cartão = 3× a capacidade. Parcela de financiamento = 80% da capacidade." (aulas 14, 19, 31)</li>
+        <li><strong>Dados cadastrais</strong>
+          "Você tem 8 telefones, 2 e-mails e 9 endereços no sistema. Qual desses é o seu?" (aula 16) · "Você mora em algum desses três endereços?" (aula 14)
+          <br>Fala-chave: <strong>"Se eu fosse o banco, também não liberaria nada para você. Como eu falo com o William? Onde ele mora?"</strong> (aula 13)</li>
+        <li><strong>Birôs (Serasa, SPC, Boa Vista, COD)</strong>
+          "Aqui está tudo nada consta: você não tem dívida. É isso que me habilita a fazer o serviço." (virar a ausência de dívida em ponto positivo)</li>
+        <li><strong>Consultas no CPF</strong>
+          "Quatro consultas por ano o banco aceita. Você teve 10 só nos últimos 2 meses. Isso é comportamento de desespero atrás de crédito." (aulas 14, 18) — "A gente apaga o histórico dos últimos 5 anos."</li>
+        <li><strong>Banco Central (SCR/Registrato)</strong>
+          Se tiver vencidos, trave a venda: "Você precisa negociar isso antes. Se não negociar, eu não consigo fazer a reestruturação." (aula 24: R$ 26 mil em vencidos). Se houver apontamentos antigos pagos: ofereça o serviço do Bacen em outra reunião (aula 36).</li>
+        <li><strong>Carteira de crédito</strong>
+          "Tudo que aparece com o nome 'empréstimo' pesa, mesmo se for fatura parcelada ou crédito rotativo. Para o banco parece que você precisa de dinheiro." (aula 14) · "Cheque especial: esquece. Se é cliente que usa todo mês, como aumentar o limite do cartão?" (aula 13)</li>
+        <li><strong>Resumo do problema</strong>
+          "Você não tem dívida. O que te trava são os dados divergentes, a renda zerada e as consultas. Isso o rating resolve." (aula 16, minuto 20)</li>
+      </ol>
+    </div>
+  </details>
+
+  <details>
+    <summary>4. Analogias que fecham a venda (use uma por call)</summary>
+    <div class="detail-body">
+      <div class="card-grid">
+        <div class="card-sm"><h4>Ferrari × carro popular</h4><p style="font-size:.88rem">"Você tem uma Ferrari na mão, mas o banco enxerga um carrinho popular. A gente vai informar ao sistema financeiro a Ferrari que você tem." (aulas 16, 18, 19, 20, 21)</p></div>
+        <div class="card-sm"><h4>Adolescente de 18 anos</h4><p style="font-size:.88rem">"Para o banco você é como um adolescente de 18 anos começando a vida financeira: sem renda, sem histórico." (aulas 13, 20) — ideal para quem tem nome limpo e nunca teve crédito.</p></div>
+        <div class="card-sm"><h4>Contas que não fecham</h4><p style="font-size:.88rem">"Capacidade de R$ 20 mil dá financiamento de 2,5 milhões. Como alguém com essa capacidade não tem um cartão? As contas não estão fechando." (aula 15)</p></div>
+        <div class="card-sm"><h4>Cartão como empréstimo</h4><p style="font-size:.88rem">"O banco te entrega um cartão de 10 mil, é como se emprestasse 10 mil todo mês. Como emprestar para quem diz que mora num endereço e no sistema aparece outro?" (aula 19)</p></div>
+        <div class="card-sm"><h4>Nota geral + nota de relacionamento</h4><p style="font-size:.88rem">"São duas notas: a geral (rating, que a gente conserta) e a de relacionamento com o seu banco (que você constrói depois)." (aulas 14, 18, 19) — Santander usa nota 0 a 10; abaixo de 7 não libera.</p></div>
+        <div class="card-sm"><h4>Gerente não é aliado</h4><p style="font-size:.88rem">"O gerente nem sempre passa algo bom para você; ele libera o que gera benefício para ele." (aula 14) — use quando o cliente diz "meu gerente disse para esperar".</p></div>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>5. Explicar o processo e o prazo (sem prometer resultado)</summary>
+    <div class="detail-body">
+      <div class="script-box">
+        <div class="script-line consultor"><div class="script-label">Consultor</div>"A minha equipe trabalha <strong>45 dias</strong> no seu CPF. Depois o Banco Central só atualiza <strong>uma vez por mês, no dia 20</strong>, e é ele quem joga a informação nova para todos os bancos. Dá em torno de <strong>60 dias</strong>. Pode terminar antes." (aulas 16, 20, 21)</div>
+        <div class="script-line consultor"><div class="script-label">Portal do cliente</div>"Você baixa o aplicativo com seu login. Cada etapa que a gente finaliza, você recebe uma notificação. Tem chat com o time interno e o meu WhatsApp, e eu respondo, não trabalho só em horário comercial." (aulas 16, 25)</div>
+        <div class="script-line consultor"><div class="script-label">Regras durante o processo (aula 20, 31)</div>"Nesses 60 dias você <strong>não pode pedir crédito novo nem atrasar conta</strong>. Você consegue fazer isso?" → "Consigo." → "Então faz sentido dar entrada?"</div>
+        <div class="script-line consultor"><div class="script-label">Primeira solicitação (aula 14)</div>"Não é você que vai sair pedindo por conta própria. A gente orienta o melhor momento. Se o banco oferecer R$ 5 mil, <strong>não pegue</strong>: se você recusa, ele aumenta. Pega quando chegar no valor que você quer. Depois, uma solicitação a cada 3 meses."</div>
+      </div>
+      <p><strong>Resposta para "qual a garantia?" (aula 25):</strong> "Você recebe contrato de prestação de serviço. Não é serviço judicial; é <strong>administrativo</strong>, a gente não depende de terceiros, é tudo com a gente. É só seguir as orientações."</p>
+      <p><strong>Resposta para "até o Natal consigo um cartão black?" (aula 14):</strong> "Não posso dar prazo exato. Um cliente nosso que travava por uma dívida de R$ 115 entrou no fim de julho e em agosto liberaram um cartão de <strong>R$ 129 mil</strong>. Quando dá a entrada surgem propostas; você avalia se é o que quer. Se não, aguarda o prazo para a primeira solicitação."</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>6. Apresentar o preço (frase por frase)</summary>
+    <div class="detail-body">
+      <div class="script-box">
+        <div class="script-line consultor"><div class="script-label">Introdução (aula 15)</div>"Durante essa ligação a gente sempre tem uma política na empresa: primeira ligação, desconto. Por quê? <strong>Eu valorizo o meu tempo e o seu</strong>, e a gente já coloca para funcionar. Combinado?"</div>
+        <div class="script-line consultor"><div class="script-label">Âncora</div>"O serviço tem valor total de R$ 3.990."</div>
+        <div class="script-line consultor"><div class="script-label">Parcelado</div>"Parcelado você ganha R$ 1.200 de desconto e fica R$ 2.790: três boletos de R$ 930, entrada hoje e as outras em 30 e 60 dias. Você escolhe as datas a partir do mês que vem. No cartão faço até 10× sem juros."</div>
+        <div class="script-line consultor"><div class="script-label">À vista</div>"Se for à vista o desconto é ainda maior, quase metade: fica R$ 1.980."</div>
+        <div class="script-line consultor"><div class="script-label">Pergunta de fechamento</div>"Você acha que faz mais sentido à vista ou parcelado?" — <strong>fique em silêncio</strong> depois da pergunta.</div>
+      </div>
+      <p><strong>Personalize pela situação:</strong> sem cartão de crédito → ofereça só boleto/Pix em 3× (aulas 16, 24). Cliente "quer parcelar no Pix em 2×" → 2× R$ 1.250 = R$ 2.500 com sinal (aula 15). Cliente que quer ver se o desconto é maior no boleto adiantado → "não, é esse valor mesmo" (aula 13).</p>
+      <p><strong>Resposta se pedir desconto ("não consegue melhorar?")</strong> (aula 24): "O valor normal é 3.990 e você já ganha 1.200 de desconto só por ser a primeira ligação." Se ainda insistir, conceda o último degrau (ver aba Preços).</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>7. Fechar com sinal: 4 situações reais</summary>
+    <div class="detail-body">
+      <div class="callout green"><div class="callout-title">Regra</div><p>"Preciso do sinal <strong>hoje, nesta ligação</strong>, para registrar o acordo e segurar o desconto no sistema. O restante você paga quando puder." O dinheiro é "o de menos" na fala; o sinal é o que transforma conversa em compromisso.</p></div>
+      <div class="script-box">
+        <div class="script-line cliente"><div class="script-label">A — "Só recebo dia 5" (aula 18)</div>"Hoje é dia 21, eu recebo só dia 5."</div>
+        <div class="script-line consultor"><div class="script-label">Consultor</div>"A única coisa para segurar o desconto é um sinal hoje, o financeiro pra nós é o de menos. A gente vai ficar 60 dias trabalhando junto. Preciso para dar entrada no sistema com acordo financeiro. Que fique confortável pra você." → o cliente liga para um amigo e antecipa. O consultor registra: "À vista 1.980 + combinado até uma hora da tarde".</div>
+      </div>
+      <div class="script-box">
+        <div class="script-line cliente"><div class="script-label">B — Barbeiro com pressa (aula 19)</div>"À vista agora eu não tenho; parcelado seria melhor, mas só na terça."</div>
+        <div class="script-line consultor"><div class="script-label">Consultor</div>"Para eu segurar esse desconto de R$ 1.200 até terça eu preciso só de um sinal. Quanto você tem aí?" — "200 reais." — "Ótimo, dinheiro é o de menos. Hoje 200, terça 730 (completa a entrada de 930), depois 17/10 e 17/11."</div>
+      </div>
+      <div class="script-box">
+        <div class="script-line cliente"><div class="script-label">C — "Recebo amanhã" (aula 25)</div>"Só consigo amanhã cedo, de verdade."</div>
+        <div class="script-line consultor"><div class="script-label">Consultor</div>"Essa condição é durante o nosso primeiro atendimento. Se você me der pelo menos <strong>R$ 200 de sinal</strong>, a gente já faz o contrato e libera o portal hoje. O resto fica para amanhã." → o cliente manda R$ 200 no Pix durante a call.</div>
+      </div>
+      <div class="script-box">
+        <div class="script-line cliente"><div class="script-label">D — Cliente sem dinheiro agora e quer pagar conforme o serviço avança (aula 21)</div>"Dá para dar um sinal, ir trabalhando e pagar o resto conforme for dando certo?"</div>
+        <div class="script-line consultor"><div class="script-label">Consultor</div>"Uma entrada, 30 e 60 dias. 3 de mil, todo dia 23. Se você sumir, sobe os meus mil, não sobe o resto." (parcelas e cobrança alinhadas na hora)</div>
+      </div>
+      <div class="callout yellow"><div class="callout-title">Quando o cliente diz "vou pensar" (aula 14)</div><p>Resposta usada: "Deus abençoe. Quando você tomar a decisão, volta o contato, aí eu te dou uma <strong>nova proposta</strong>. A gente não tem o hábito de ficar insistindo, é um serviço que dá resultado e a decisão é sua." Não insista, mas também não mantenha o desconto: o desconto era "só durante essa ligação".</p></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>8. Depois do "sim": dados, contrato, portal e indicação</summary>
+    <div class="detail-body">
+      <ol class="steps">
+        <li><strong>Mande o link do formulário e a chave Pix na hora.</strong> "Eu te mandei os dados que preciso para o contrato; você consegue preencher agora, enquanto eu faço o orçamento?" (aulas 16, 24, 25)</li>
+        <li><strong>Avise que o endereço, e-mail e telefone que ele colocar ficam por 12 meses.</strong> "Toda solicitação nos próximos 12 meses tem que ser com essas mesmas informações." Se mudou de casa: "tem que colocar o endereço atual; o cartão iria para o endereço anterior" (aula 14).</li>
+        <li><strong>Peça o comprovante.</strong> "Assim que você fizer o Pix, me encaminha o comprovante, eu peço para liberar seu acesso." (aula 14: "a gente faz na ligação, porque quando a gente finaliza aqui já tem que estar tudo ok")</li>
+        <li><strong>Contrato e portal.</strong> A secretária/equipe liga para mandar contrato (assinatura online) e login do portal. Documentos pedidos: identidade, CPF, extrato da conta principal dos últimos 3 meses (ou IR/DECORE) (aulas 13, 14).</li>
+        <li><strong>Envie o relatório (PDF) depois.</strong> "Quando termino a reunião eu mando a tela para o cliente" (aula 25).</li>
+        <li><strong>Peça indicação.</strong> "A gente trabalha com parceria: se você indicar alguém e eu fechar, pago 20% do contrato. Com 5 indicações seu serviço está garantido." (aulas 24, 25)</li>
+        <li><strong>Reforce as regras.</strong> Não atrasar nada, não pedir crédito, não usar cheque especial por 60 a 90 dias (aula 31).</li>
+      </ol>
+    </div>
+  </details>
+
+  <details>
+    <summary>9. Casos especiais: como ajustar o roteiro</summary>
+    <div class="detail-body">
+      <div class="case"><div class="case-title">Cliente que já tem crédito e quer mais (aula 23)</div><div class="case-body">Cliente com rating AA e financiamento aprovado. Não venda "desbloqueio", venda <strong>melhoria</strong>: "Eu tenho clientes AAA que não conseguem cartão. Nosso objetivo é ajudar a buscar melhores cartões, financiamentos aprovados e tirar apontamentos de risco." Pergunta aberta: "se você almeja só o que já tem, não vale investir. Se quer mais, o rating faz sentido." Fechou 3 parcelas, e o consultor marcou segunda reunião para falar de investimento, para ele deixar de ser só tomador.</div></div>
+      <div class="case"><div class="case-title">Cliente que já foi lesado por consultoria (aula 22)</div><div class="case-body">Testou o serviço no pai (renda declarada de R$ 10 mil e score parado em 610–650) porque "clientes meus contrataram serviços assim e não era o serviço prestado". Postura: não defender, mostrar o relatório, o portal e o contrato, aceitar que ela teste com um CPF e propor <strong>parceria</strong> (ela também vende crédito, consórcio e revisional). Fechou em boleto.</div></div>
+      <div class="case"><div class="case-title">Cliente que também é vendedor (aula 14)</div><div class="case-body">"Cliente vendedor entende a lógica." Seja direto, não enrole, mostre números. Quando ele disser "se der R$ 1.900 agora no Pix eu fecho", decida na hora: o consultor aceitou, porque "uma venda menor é melhor do que nenhuma".</div></div>
+      <div class="case"><div class="case-title">Empresário que movimenta alto e não tem cartão (aula 24)</div><div class="case-body">Puxe o extrato com ele na tela ("entradas do último mês: R$ 526.285. O banco entende que você ganha R$ 8 mil"). Antes de vender, confira vencidos no SCR com ele: se tem R$ 26 mil em aberto, ele precisa negociar primeiro. Explique que "movimentação não quer dizer que você ganha" e que o sistema faz média; renda estimada ~R$ 80 mil. Ofereça indicação 20%.</div></div>
+      <div class="case"><div class="case-title">Cliente sem pressa (aula 36)</div><div class="case-body">Em segunda reunião, mostre o SCR: "Aqui aparece um apontamento de R$ 2.994 da Nubank que você pagou. Para cartão está tudo ok; para financiar carro em 2027 isso pode te travar; para casa o banco olha 5 anos. Tem como remover por ação judicial, 3 a 4 meses. Tem interesse agora ou não?" Sem pressão: "à medida que o tempo passa isso fica mais antigo". Deixe o serviço de Bacen como próxima venda.</div></div>
+      <div class="case"><div class="case-title">Casal / dois CPFs (aula 37)</div><div class="case-body">Cliente pede desconto para fazer o do marido e da esposa: "Se você fizer R$ 1.200 cada CPF, já fecha." Antes, verifique se a esposa não tem restrição. Se a renda real é declarada só no IR, monte grupo com o contador para ajustar.</div></div>
+      <div class="case"><div class="case-title">Cliente que apresenta rating AAA mas sem crédito (aulas 17, 25)</div><div class="case-body">"Você está em AAA e não consegue aprovação: tem alguma coisa te travando, vamos identificar." Procure renda presumida baixa (R$ 5.500 vs R$ 9.000 real), empréstimo FGTS ocupando capacidade, telefones antigos, divergência de dados.</div></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>10. Objeções: respostas completas</summary>
+    <div class="detail-body">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Objeção</th><th>Resposta (falas reais)</th></tr></thead>
+        <tbody>
+          <tr><td>"Preciso entender primeiro de valores"</td><td>"Perfeito. Durante essa ligação, primeira ligação, eu tenho uma política de desconto porque valorizo o meu tempo e o seu." Siga com o script do preço (aula 15).</td></tr>
+          <tr><td>"Não quero pagar no cartão"</td><td>"Se for no boleto ou Pix, a gente parcela até 3 vezes: R$ 930 + R$ 930 + R$ 930." (aula 13)</td></tr>
+          <tr><td>"Tem desconto se eu adiantar o boleto?"</td><td>"Não, é esse valor mesmo." (aula 13). O desconto já está embutido.</td></tr>
+          <tr><td>"Não consigo pagar hoje"</td><td>"Me dá qualquer valor de sinal para segurar o desconto. O financeiro é o de menos." (aulas 18, 19, 25, 29)</td></tr>
+          <tr><td>"Vou pensar"</td><td>"Quando decidir, volta o contato e eu te dou uma nova proposta." (aula 14) · "A proposta só vale nessa ligação." (aulas 19, 21)</td></tr>
+          <tr><td>"Gosto do meu banco, tenho conta há 10 anos"</td><td>"Você tem que fazer uma escolha: ou você quer crédito ou muda de banco. Eu não vou te vender milagre." (aula 15)</td></tr>
+          <tr><td>"Já fui enganado por outra empresa"</td><td>Mostre portal, contrato e notificação por etapa. Proponha teste e foque no processo (aula 22). "A gente só faz o serviço que dá resultado."</td></tr>
+          <tr><td>"Qual a garantia?"</td><td>"Não é serviço judicial, é administrativo; está no contrato; é só seguir as orientações." (aula 25) · Nunca prometer aprovação de banco.</td></tr>
+          <tr><td>"Meu contador atualiza tudo"</td><td>"O contador atualiza a Receita Federal, mas não consegue atualizar o rating bancário." (aula 37)</td></tr>
+          <tr><td>"Meu gerente falou para esperar a nota melhorar"</td><td>"Existem dois ratings: o de relacionamento com o seu gerente e o comercial. Hoje o seu comercial está em BBB e é isso que ele espera melhorar." (aula 16)</td></tr>
+          <tr><td>"Já tenho crédito e está tudo bem"</td><td>"Se você almeja o que já tem, não vale a pena investir. Se quer mais limite e taxas melhores, o rating ajuda." (aula 23)</td></tr>
+        </tbody></table></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>11. O que nunca dizer e erros vistos nas aulas</summary>
+    <div class="detail-body">
+      <div class="rule-grid">
+        <div class="rule-item"><div class="rule-icon red">×</div><div class="rule-text"><strong>"Garanto o cartão"</strong>Diga "garanto o processo, o banco decide" (aulas 14, 18, 25).</div></div>
+        <div class="rule-item"><div class="rule-icon red">×</div><div class="rule-text"><strong>Mostrar preço antes do relatório</strong>O cliente precisa ver a dor antes de ouvir o valor.</div></div>
+        <div class="rule-item"><div class="rule-icon red">×</div><div class="rule-text"><strong>Vender para quem tem dívida ativa</strong>Gera reclamação e destrói indicação.</div></div>
+        <div class="rule-item"><div class="rule-icon red">×</div><div class="rule-text"><strong>Aceitar "pago depois da call"</strong>Sem sinal, sumiço.</div></div>
+        <div class="rule-item"><div class="rule-icon red">×</div><div class="rule-text"><strong>Misturar com limpa-nome</strong>Cliente diferente, expectativa diferente.</div></div>
+        <div class="rule-item"><div class="rule-icon red">×</div><div class="rule-text"><strong>Mostrar "antes e depois" editado</strong>Aula 07: "aqui a gente faz de verdade".</div></div>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ═══════════════ TAB: BACEN ═══════════════ -->
+<section id="tab-bacen" class="section">
+  <h2 class="section-title">Bacen, Registrato & Apontamentos</h2>
+  <p class="section-desc">Como ler o histórico do cliente no Banco Central, quanto tempo cada banco "olha para trás" e como remover apontamentos de dívidas já pagas (e vender isso como segundo serviço).</p>
+
+  <div class="subsection">
+    <div class="subsection-label">Quanto tempo o banco olha para trás (por produto)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Produto que o cliente quer</th><th>Histórico analisado no SCR</th><th>O que isso significa</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aumento de limite / cartão</strong></td><td>3 a 12 meses</td><td>Se a aba "vencidos" está limpa há 12 meses, o cartão normalmente passa (aulas 33, 36, 38)</td></tr>
+        <tr><td><strong>Financiamento de carro</strong></td><td>1,5 a 2 anos (depende da financeira)</td><td>Apontamento de 2025 pode travar um financiamento em 2027</td></tr>
+        <tr><td><strong>Financiamento de casa / imóvel</strong></td><td>5 anos (60 meses)</td><td>É o produto que exige mais limpeza; por isso o relatório pedido é de 5 anos</td></tr>
+        <tr><td><strong>Capital de giro / PRONAMP (PJ)</strong></td><td>5 anos</td><td>Pente fino também nos sócios</td></tr>
+      </tbody></table></div>
+    <div class="callout blue"><div class="callout-title">Frase para o cliente (aula 38)</div><p>"Quanto maior o crédito, mais criteriosa é a análise. Para cartão, está tudo ok; para casa o banco olha cinco anos. Por isso eu gosto de mostrar isso para você ver com os seus olhos."</p></div>
+    <div class="callout yellow"><div class="callout-title">Como o apontamento "envelhece"</div><p>O Bacen atualiza todo dia 20 (algumas aulas dizem 20 e 21) com delay de 60 dias. Um apontamento de 10 meses atrás vira 11 e depois 12 na atualização seguinte: <strong>se o cliente não atrasar mais nada, a cada mês ele "fica para trás"</strong>. Um apontamento isolado pesa bem menos que apontamentos em 10 bancos (aula 33). Exemplo de delay (aula 10): pagar hoje 18/jun só sai na atualização de 21/ago; pagar em 22/jun, só em 21/set.</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Passo a passo: tirar o SCR (Registrato) com o cliente</div>
+    <ol class="steps">
+      <li><strong>Entrar no Registrato</strong> do Banco Central com login gov.br (nível prata/ouro).</li>
+      <li><strong>Empréstimos e Financiamentos (SCR) → Gerar novo relatório.</strong></li>
+      <li><strong>Escolher "Histórico"</strong> (não "último relatório disponível").</li>
+      <li><strong>Mês inicial = 5 anos atrás</strong> (ex.: 10/2021) até o último mês disponível.</li>
+      <li><strong>Aceitar os termos e baixar o PDF.</strong> Pode ter 90+ páginas. O cliente sobe no portal ou manda no WhatsApp.</li>
+      <li><strong>Para PJ:</strong> mesmo caminho, mas o acesso exige certificado digital da empresa (o contador costuma ter). "Tem contador que nunca tirou."</li>
+      <li><strong>CCS (Contas e Relacionamentos):</strong> ao lado do SCR. Mostra todas as contas ativas no CPF e as encerradas. Serve para decidir quais contas encerrar.</li>
+    </ol>
+    <p style="font-size:.85rem;color:var(--fg3)">Dica de call (aulas 24, 36): faça isso <strong>com o cliente na tela</strong> e vá dizendo onde clicar. Mande o passo a passo em vídeo/WhatsApp depois. Em aula 33 a consultora agenda uma segunda reunião só para ler o SCR e o CCS com ele.</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Como ler o relatório (o que pesa e o que não pesa)</div>
+    <div class="card-grid">
+      <div class="card-sm" style="border-color:var(--danger)"><h4 style="color:var(--danger)">Aba "Vencidos"</h4><p style="font-size:.88rem">É o problema. O banco aponta quando o atraso é significativo (1–2 dias não aponta, 30+ dias sim). Cada mês de atraso fica registrado; quando paga, os meses seguintes saem, mas <strong>o histórico dos meses anteriores permanece</strong>: a "lista negra/lista oculta" dos bancos.</p></div>
+      <div class="card-sm" style="border-color:var(--accent)"><h4 style="color:var(--accent)">Aba "Em dia"</h4><p style="font-size:.88rem">Operações ativas (cartão, crédito pessoal sem consignação, financiamento) pagando normal. <strong>Não atrapalha.</strong> Quando a renda presumida sobe, o peso delas cai.</p></div>
+      <div class="card-sm"><h4>Prejuízo ao sistema</h4><p style="font-size:.88rem">Dívida paga com desconto que entrou como prejuízo (ex.: R$ 23.872 na aula 24). Pagar com desconto é válido: ela entra no SCR de qualquer jeito e o jurídico remove depois (aula 11).</p></div>
+      <div class="card-sm"><h4>Dívida "escondida"</h4><p style="font-size:.88rem">Aula 28: restrição interna do PicPay de R$ 1.600 que não aparecia no Serasa nem no app. Depois de paga, o banco liberou cartão de R$ 4.000. Pergunte sempre: "já puxou o Registrato?"</p></div>
+    </div>
+    <div class="callout red"><div class="callout-title">O cliente "não sabe" que está apontado</div><p>O banco é obrigado por lei a notificar (e-mail, SMS ou carta com AR) e quase nunca faz. <strong>Essa falta de notificação é o que dá força à ação judicial</strong> e abre espaço para indenização.</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Remoção de apontamentos: o fluxo completo</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot info"></div><div class="tl-label">1) Identificar cada apontamento</div><div class="tl-desc">No SCR histórico anote banco, mês e valor de cada apontamento de dívida já paga. Exemplos reais das aulas: Nubank, Bradescard, Banco CSF, Mercado Pago/Mercado Crédito, Midway (Riachuelo), Caixa, Unibanco, Itaú; valores de R$ 154 a R$ 10.562. <strong>Uma reclamação por banco</strong> ("se são 5 bancos, 5 reclamações").</div></div>
+      <div class="tl-item"><div class="tl-dot info"></div><div class="tl-label">2) Reclamação administrativa (grátis se o cliente faz)</div><div class="tl-desc">Pelo site do Banco Central (gov.br) e também por escrito com o banco (chat do app com print da tela inteira, e-mail ou WhatsApp). "Conversa informal não prova nada." Texto: cita o artigo/lei, pede "regularização da informação com a retirada dos registros lançados como vencido", anexa comprovante de pagamento e correlaciona datas ("remover o apontamento de nov/2025 a dez/2025") e alega <strong>falta de notificação</strong>. O consultor envia mensagem pronta + vídeo mostrando onde clicar.</div></div>
+      <div class="tl-item"><div class="tl-dot warn"></div><div class="tl-label">3) Aguardar 10 dias</div><div class="tl-desc">O banco responde por e-mail, quase sempre com resposta genérica, e o apontamento continua. O cliente <strong>printa tudo e guarda em pasta por banco</strong> (um e-mail por banco). Isso vira prova de boa-fé: "o juiz vê com bons olhos o cliente que tentou resolver." Às vezes dá sorte e remove.</div></div>
+      <div class="tl-item"><div class="tl-dot warn"></div><div class="tl-label">4) Dossiê para o processo</div><div class="tl-desc">Reclamações feitas + comprovantes de pagamento ou acordo (extratos, prints do Serasa "acordos quitados") + <strong>negativas de crédito</strong> em que o banco/seguradora cita "problema no Bacen/Registrato/restrição interna" (financiamento, seguro-fiança, imobiliária) + nenhum apontamento novo recente. Não precisa achar todos os comprovantes; o mais recente basta.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-label">5) Ação judicial</div><div class="tl-desc">Novo contrato + procuração (assinada pelo WhatsApp). Protocolada na <strong>comarca do cliente</strong>, 100% online, com audiência, <strong>90 a 120 dias (3–4 meses)</strong>, um processo individual contra cada banco, com número para o cliente acompanhar. Peça <strong>indenização</strong> quando o cliente está bem documentado: "não é valor astronômico, mas recupera o que gastou" (aula 09). Na aula 08 foi dito que se pode cobrar do cliente até 49% da indenização.</div></div>
+    </div>
+    <div class="callout green"><div class="callout-title">Preços citados</div><p>Aula 38: <strong>R$ 2.500 à vista ou R$ 3.000 a prazo</strong> (parcelável) por serviço de remoção. Aula 07: R$ 750 por CPF/CNPJ como custo/serviço repassado ao aluno. Aula 07: o aluno que vendeu R$ 2.500 em até 3×. Venda de Bacen + rating juntos por R$ 4.500 foi considerada erro (ver "Vender o Bacen" abaixo).</p></div>
+    <div class="callout yellow"><div class="callout-title">Cuidado com a promessa</div><p>Aula 11: <strong>o administrativo quase sempre falha</strong> (os bancos dizem que SCR é "registro contábil"); o judicial julga <strong>cada apontamento individualmente</strong> (20 apontamentos = 20 pedidos). "Nem a OAB permite garantir 100%." Venda como: "existe um processo onde pleiteamos ao juiz a retirada; ele tenta ou fica travado." Nunca prometa prazo fechado de "resolvido em 90 dias". Na aula 38 a consultora diz "100%" em casos de dívida paga isolada; na aula 07 o instrutor admite risco de não tirar. Trate como "alta chance, depende do juiz".</p></div>
+    <div class="callout blue"><div class="callout-title">Histórico interno não some</div><p>Mesmo removendo do Bacen, o banco que apontou mantém "histórico interno" por anos (aula 38: Caixa de 2022 só libera cartão baixo). Cada banco tem uma nota interna além do rating, e "como briga de marido e mulher, nunca volta a ser como antes". Por isso o cliente constrói relacionamento em um banco onde nunca teve problema.</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Vender o Bacen: quando e como (aulas 07, 24, 36)</div>
+    <ol class="steps">
+      <li><strong>Venda o rating primeiro.</strong> A consulta do sistema mostra só os últimos ~90 dias de Bacen; se nada aparece, comece pelo rating.</li>
+      <li><strong>~20 dias depois</strong>, peça o SCR do cliente (o compliance também pede) e procure apontamentos antigos (dívida paga com desconto há 2 anos, por exemplo).</li>
+      <li><strong>Segunda reunião:</strong> "Descobri por que você não consegue financiamento. É o momento oportuno de fazer o Bacen."</li>
+      <li><strong>Venda um serviço por vez.</strong> O segundo é muito mais fácil porque o primeiro gerou confiança e provou a causa. Pacote de R$ 4.500 faz o cliente travar no preço e não fazer nenhum.</li>
+      <li><strong>Cliente sem pressa (aula 36):</strong> mostre os apontamentos, explique o que travam no futuro (carro em 2027, casa em 5 anos), pergunte "tem interesse em mexer agora ou não?" e deixe amadurecer. "À medida que o tempo passa isso fica mais antigo."</li>
+      <li><strong>Cliente com R$ 50 mil de dívida + prejuízo no banco (aula 07):</strong> não adianta rating; resolver Bacen primeiro; pagar com desconto e depois entrar com o processo (3–6 meses). Se não consegue pagar os dois de uma vez, faça o Bacen primeiro e deixe o compliance seguir com o rating em paralelo.</li>
+    </ol>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Contas em excesso: encerrar (aulas 09, 33, 34)</div>
+    <ul>
+      <li>Conta digital sem uso → baixar o app e encerrar. Banco físico → ir à agência e pedir encerramento. O banco não fecha por conta própria (contas de 10 anos atrás seguem "ativas" no CCS).</li>
+      <li>Muita gente tem conta sem saber: <strong>cartão de loja/varejista abre conta automática</strong>, maquininha (Moderninha etc.) abre conta no CPF, cartão que nunca foi desbloqueado também consta.</li>
+      <li>Depois de encerrar, o <strong>CCS demora</strong> para atualizar (aparece "ativo", depois "fim do relacionamento"). Caso Ramon: encerrou 9 contas em 1 mês.</li>
+      <li>Meta: 1 a 3 contas. "Ter 9–10 contas vira maionese: é mais difícil movimentar 3 do que 1."</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Fraude/contestação de Pix e "desinteresse comercial"</div>
+    <div class="card">
+      <ul>
+        <li><strong>Contestação de Pix:</strong> se o recebedor contestou e o banco (ex.: Mercado Pago) informou ao Bacen, o cliente entra numa lista que impede abrir conta. Não aparece na consulta; o cliente costuma saber. Resolver com o jurídico (aula 10).</li>
+        <li><strong>Conta encerrada por "desinteresse comercial":</strong> o banco entendeu que a movimentação não condiz com o IR. Cuidado com boletos em débito automático que continuam indo para conta encerrada: geram parcela vencida no SCR (caso aula 24).</li>
+        <li><strong>Aviso de negativação ≠ dívida inscrita (aula 11):</strong> o Serasa pode mostrar "aviso" com data futura de inclusão; a consulta só mostra inscritas.</li>
+        <li><strong>SCR vazio ≠ cliente sem crédito:</strong> o cliente pode ter esperado 5 anos para a dívida "caducar" e agora tenta de novo; o banco o vê como risco recente. Peça SCR do CPF e do CNPJ.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- ═══════════════ TAB: BANCOS ═══════════════ -->
+<section id="tab-bancos" class="section">
+  <h2 class="section-title">Bancos, Relacionamento & Comportamento</h2>
+  <p class="section-desc">Como o banco decide, o que o cliente deve e não deve fazer, como abrir conta, como pedir crédito e como ler a carteira de crédito.</p>
+
+  <div class="subsection">
+    <div class="subsection-label">Como o banco decide: 2 notas + 3 barreiras</div>
+    <div class="card-grid">
+      <div class="card-sm"><h4>Duas formas de ter crédito</h4><p style="font-size:.88rem"><strong>1) Relacionamento</strong> com o banco (nota interna). <strong>2) Rating bancário</strong> (classificação de risco criada pelo Bacen). Os dois precisam estar bons. Frase usada nas aulas 28, 29, 30, 32.</p></div>
+      <div class="card-sm"><h4>3 barreiras (aula 12)</h4><p style="font-size:.88rem">Crédito é como uma corrida de 100 m com 3 barreiras: <strong>(1) birôs</strong> (SPC, Serasa, Boa Vista, COD) → <strong>(2) Bacen/SCR</strong> → <strong>(3) rating</strong>. Cliente com Bacen ou Serasa sujo não ganha crédito só com rating.</p></div>
+      <div class="card-sm"><h4>Adimplência + informação</h4><p style="font-size:.88rem">"O crédito é fruto de adimplência mais informação." Letra C−: é adimplência (dívida em birô), mande negociar. Letra AA/AAA sem crédito: problema de informação (renda, cadastro) ou de capacidade.</p></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Banco</th><th>Nota interna</th><th>Detalhe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Santander</strong></td><td>Escala 0 a 10</td><td>7 ou mais libera algo; 8 aumenta limite; 9 começa financiamento; 10 sem trava. Aula 07: uma cliente usou 1 dia de limite de conta e a nota caiu de 7 para 4. Santander é "campeão em liberar cheque especial" quando a estrutura melhora: avisar para não usar.</td></tr>
+        <tr><td><strong>Itaú</strong></td><td>Letras A a E</td><td>A é bom, C não aprova, precisa estar entre B e A. Cheque especial faz a nota descer aos poucos, mesmo que seja 1 dia. Itaú tem tecnologia forte e hoje é "mais liberal" em captação (aula 07), mas segue o rating "à risca" (aula 24).</td></tr>
+        <tr><td><strong>Rating Bacen (todos)</strong></td><td>AAA a C−</td><td>Alguns mostram nota numérica 10 a 3. Linha de corte: <strong>de C para baixo o crédito é recusado na hora</strong>. Dica: peça ao gerente "qual é a minha classificação?"</td></tr>
+      </tbody></table></div>
+    <div class="callout blue"><div class="callout-title">Origem do rating (aula 01)</div><p>Antes os bancos usavam o score, mas cada birô dá uma nota diferente (Serasa 600, Boa Vista 800, SPC 400) e "o banco ficou perdido". Com a febre dos bancos digitais, todo mundo abria conta em todos e parava de usar: milhões de contas paradas. Os bancos criaram pontuação própria baseada em movimentação e relacionamento, cruzando Serasa, COD, Receita, Bacen e dados internos. Por isso a nota pode ser boa no Santander e péssima no Bradesco.</p></div>
+    <div class="callout red"><div class="callout-title">Divergência de dados pode virar "suspeita de fraude" (aula 01)</div><p>Exemplo do casamento: nome na Receita "Arlindo Silva", documento novo "Arlindo Silva Souza". O banco cruza, nega na hora e muitas vezes nem diz o motivo ("divergência de dados"). Às vezes trata como possível fraude: "o cliente que não sabe o próprio nome". Daí a recusa automática e imediata.</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Open Finance: como cancelar e por quê (aulas 04, 28)</div>
+    <div class="card">
+      <ul>
+        <li>Open Finance <strong>compartilha crédito e dívidas</strong> entre bancos (positivo e negativo). Se o PicPay sabe de uma negociação antiga, o Itaú passa a saber.</li>
+        <li>Se o Inter libera R$ 10 mil, o Itaú não libera mais R$ 10 mil: "eles estão se comunicando".</li>
+        <li><strong>Ação:</strong> mandar o cliente cancelar. No app: Open Finance → contas conectadas → encerrar conexão. Na aula 28 o consultor mandou cancelar ao vivo (Itaú, Inter e PicPay).</li>
+        <li>Quem vai ter relacionamento direto com banco físico não precisa de Open Finance. "O banco diz que é melhor para ter mais crédito, mas não é."</li>
+        <li>Aula 15: quem tem restrição interna num banco (ex.: Bradesco) não deve abrir o Open Finance justamente com esse banco.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Cheque especial e gerente que vende pacote</div>
+    <div class="card-grid">
+      <div class="card-sm" style="border-color:var(--danger)"><h4 style="color:var(--danger)">Cheque especial</h4><p style="font-size:.88rem">"Vilão." Não importa se foi 1 dia ou 10: o banco avalia comportamento. Cria trava interna e externa. Se entrar R$ 1, "cria trava interna com o próprio Santander" (aula 31). Banco que libera limite de R$ 100 (inútil) está só testando. <strong>Peça para cancelar o limite</strong> se não usa. Gerente diz que é bom porque quem ganha é ele.</p></div>
+      <div class="card-sm" style="border-color:var(--warn)"><h4 style="color:var(--warn)">Gerente e pacotes</h4><p style="font-size:.88rem">Aulas 04, 28, 31: gerente empurra seguro/pacote "para liberar limite". "Se ele tiver que liberar limite para você, libera sem você comprar nada." Exemplo: aposentado com salário mínimo e cartão de R$ 30 mil. <strong>Produtos do banco só fazem sentido depois do rating, para quem já tem estrutura</strong> (aula 07, 34, 39: débito automático, CDB, seguro de vida). Título de capitalização de R$ 6–12 mil para "garantir" crédito: "eu não faria".</p></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Trava interna por negociação (aulas 15, 28, 31, 32)</div>
+    <ul>
+      <li>Toda negociação de dívida com desconto cria restrição interna naquele banco. Em 95% dos casos fica no mínimo 3 anos; em 90% pelo resto da vida. Se teve desconto, "100% de certeza que você não consegue mais nada lá".</li>
+      <li>Mesmo pagando o valor cheio com juros direto na empresa, a trava existe. <strong>Se vai ter trava de qualquer jeito, pague pela opção mais barata</strong> (ex.: negociação no Serasa) e construa relacionamento em outro banco (aula 32).</li>
+      <li>A trava vale <strong>só para aquele banco</strong>: negociou com o Santander em 2019 → não consegue mais nada no Santander, mas pode no Itaú (aula 28).</li>
+      <li><strong>Plano B (aula 32):</strong> inicie no banco com possível trava, dê 90 dias; se não liberar nem cheque especial, troque de banco e recomece a contagem. Alternativa: cooperativa (Sicoob/Sicredi/Cresol), também banco físico privado.</li>
+      <li>Se nada libera mesmo depois de tudo: "trava interna, o gerente nunca diz qual". Trocar de banco.</li>
+    </ul>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Tipo de banco</th><th>Prazo de resultado</th><th>Espera após negativa</th></tr></thead>
+      <tbody>
+        <tr><td>Privado físico (Santander, Itaú, Bradesco, Sicoob)</td><td>3 a 6 meses</td><td>90 dias</td></tr>
+        <tr><td>Governamental (Caixa, BB, BNB)</td><td>6 meses a 1 ano</td><td>180 dias ("o dobro")</td></tr>
+        <tr><td>Digital (Nubank, Inter, C6, PagBank)</td><td>Automático, sem fator humano</td><td>O que liberam "nem chega perto" de um físico privado</td></tr>
+      </tbody></table></div>
+    <p style="font-size:.85rem;color:var(--fg3)">A conta de relacionamento deve ser de pessoa física (aula 32). Cliente "tem amor ao banco": "você quer crédito ou muda de banco" (aula 15).</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Abrir conta do jeito certo (aulas 09, 38, 39)</div>
+    <ol class="steps">
+      <li><strong>Sempre na agência física.</strong> Pelo aplicativo você não ganha gerente e depois precisa fazer upgrade na agência. Escolha "o gerente de cara mais simpática".</li>
+      <li><strong>Leve:</strong> IR da PF e da PJ organizados, extratos digitalizados (e impressos, por precaução).</li>
+      <li><strong>Não peça crédito, limite nem cheque especial na abertura.</strong> Entre como investidor. Peça só o que quer contratar.</li>
+      <li><strong>Combo imediato:</strong> 3 débitos automáticos (luz, internet, telefone, fatura do cartão), CDB/CDI acima de R$ 100 (um aluno aplicava R$ 500–1.000/mês), Tesouro Direto pelo banco, seguro de vida (~R$ 50/mês), plano de saúde (Bradesco Saúde às vezes isenta a manutenção da conta).</li>
+      <li><strong>Depois de 60 dias:</strong> converse com o gerente. "Muitas vezes já libera algo de início."</li>
+      <li><strong>Máximo 2 bancos, cada um com PF + PJ.</strong> "Quando você traz PJ e PF para o mesmo banco, o banco gosta." Separe: débitos pessoais na PF, da empresa na PJ.</li>
+      <li><strong>Pergunte ao gerente qual produto ele precisa vender no mês</strong> (seguro de R$ 100–200/mês): "gerente tem meta e dia certo" (aula 11, roteiro do Kleber).</li>
+      <li><strong>Abra o "banco oposto"</strong> (Bradesco ↔ Itaú/Santander; Sicoob ↔ Sicredi): "para ser disputado; com uma conta só você é refém" (aula 11).</li>
+    </ol>
+    <div class="callout green"><div class="callout-title">Débito automático bem feito (aula 39)</div><p>Programe o débito da fatura <strong>~3 dias antes do vencimento e depois do fechamento da fatura</strong>. Não antecipe antes do fechamento ("pagamento antecipado não é tão interessante"). Evite vencimento em sábado ou feriado para não gerar juros. Cartão novo já entra no débito. Energia é a conta que mais atrasa: coloque no débito.</p></div>
+    <div class="callout green"><div class="callout-title">Resultado real da aula 09/39 (Sicoob)</div><p>Depois de atualizar a renda no banco (de R$ 10 mil para ~R$ 24 mil anexando IR), o banco passou a oferecer <strong>cartão de ~R$ 4 mil e empréstimo pré-aprovado de R$ 20 mil</strong>, que antes não ofertava. A PJ passou a ter pré-aprovado de R$ 40–50 mil: "seu rating já influencia a PJ também". O interessante é o <strong>limite do cartão</strong>, não o empréstimo (juros ~3% ao mês no exemplo).</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">A escada de ofertas: não pegue a primeira (aulas 04, 28, 29, 30)</div>
+    <div class="card">
+      <p>O banco começa baixo. Se tem R$ 30 mil para liberar, <strong>começa com R$ 3 mil</strong>. Se você pega, ele entende que "você só precisa daquilo" e aumentar depois é um processo mais longo. Se você não pega, sobe: 3 → 5 → 10 → ... até o teto. Financiamento: se vai liberar R$ 100 mil, libera primeiro R$ 20 mil.</p>
+      <div class="card-grid">
+        <div class="case"><div class="case-title">Caso do sogro (aula 28)</div><div class="case-body">Santander "frio": cada filho com cartão de R$ 1–2 mil. O sogro recusou as propostas, depois aceitou a de uma moto e veio <strong>R$ 90 mil de limite sem renda comprovada</strong>.</div></div>
+        <div class="case"><div class="case-title">Caso R$ 115 (aulas 14, 28)</div><div class="case-body">Cliente com renda de R$ 50 mil e nenhum cartão, travado por uma <strong>dívida de R$ 115</strong>. Depois do serviço liberaram <strong>R$ 129 mil</strong> de cartão no mês seguinte.</div></div>
+      </div>
+      <p><strong>Exceção:</strong> se a oferta já é o limite que o cliente queria, pode pegar. <strong>Mentalidade:</strong> "É melhor ter e não precisar do que precisar e não ter." Queremos que o banco libere R$ 500 mil e você só use R$ 100 mil.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Regra da 3ª tentativa e as 4 avaliações por ano (aulas 04, 28, 30)</div>
+    <ul>
+      <li>O banco avalia o comportamento de 3 em 3 meses: <strong>4 avaliações por ano</strong>. Mais de 4 buscas por ano e "o banco já começa a travar".</li>
+      <li><strong>Tudo vira consulta:</strong> CPF em cartão de loja, simulação de parcela de carro, "ver se tem crédito" no app do banco.</li>
+      <li><strong>Regra da 3ª:</strong> a primeira solicitação o banco nega, a segunda nega, <strong>"a partir da terceira o CPF já está travado"</strong> e nenhum banco libera.</li>
+      <li>Casos: Ednaldo teve 5 buscas em 12 meses (4 no ano); Leandro teve 11 em 12 meses (6 só no último mês).</li>
+      <li>O Bacen guarda 60 meses; o serviço zera e a primeira solicitação passa a ser lida como "primeira vez que esse cliente busca crédito". Por isso <strong>a primeira solicitação tem que ser a mais importante</strong>: escolher UMA entre cartão, financiamento ou capital de giro.</li>
+      <li><strong>Por que 90 dias:</strong> quando o banco nega, diz "tente de novo em 90 dias": é a janela que ele precisa para avaliar comportamento. "Vamos respeitar a mesma janela." Se não aprovou, mais 90 dias, sempre 90 em 90.</li>
+      <li>Consultas de seguradora e plano de saúde não derrubam o rating (fortalecem), então não precisa excluir (aula 11).</li>
+      <li><strong>Serasa Premium (R$ 23–24/mês)</strong> bloqueia o CPF para nenhum banco consultar nos 3 primeiros meses; depois pode cancelar. O consultor manda vídeo de como bloquear.</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Como ler a carteira de crédito (aulas 28, 30, 31)</div>
+    <p><strong>Frase-chave:</strong> "tudo que tem o nome 'empréstimo' é ruim para o banco, mesmo que seja R$ 2. Parece que você está pedindo dinheiro" e consome da capacidade de pagamento.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Linha do relatório</th><th>O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Empréstimo</td><td>Crédito pessoal ou fatura de cartão parcelada que entrou como empréstimo. Inclui <strong>FGTS saque-aniversário</strong></td><td>R$ 233; R$ 5.000 ativo incluindo R$ 2</td></tr>
+        <tr><td>Crédito rotativo</td><td>Juros do cartão: fatura de R$ 100, você paga R$ 98, os R$ 2 vão para o mês seguinte</td><td>R$ 2.000</td></tr>
+        <tr><td>Faturas de cartão</td><td>Soma das faturas abertas</td><td>R$ 824 · R$ 3.200</td></tr>
+        <tr><td>Cheque especial / adiantamento a depositantes</td><td>Limite + uso. "Sem futuro"</td><td>R$ 9.900 no caso Sibeli</td></tr>
+        <tr><td>Limite de cartão disponível</td><td>O que sobrou do limite</td><td>R$ 1.788</td></tr>
+      </tbody></table></div>
+    <ul>
+      <li><strong>Dívida em dia não pesa</strong> quando a renda presumida sobe: "só vai impactar se atrasar". Resposta a "devo quitar antes?": "dinheiro é melhor na conta" (aula 28).</li>
+      <li><strong>Saque-aniversário do FGTS</strong> não compromete a renda de verdade (o governo paga), mas o nome "empréstimo" pesa na carteira (aulas 03, 31).</li>
+      <li><strong>"Endividamento crítico"</strong> aparece quando o cadastrado é maior que o que o Bacen enxerga; o banco trava a operação. Depois de ajustar a renda, cai.</li>
+      <li>"Tudo que o gerente coloca é só ele que está ganhando." Cliente que usa limite pouco ("30 e poucos mil de limite e só usou 4") é organizado (aula 11).</li>
+      <li><strong>Cartões em vários bancos:</strong> R$ 15 mil de renda em 3 bancos de R$ 5 mil cada "não é cliente bom para nenhum" (aula 17). Contas no nome da esposa não ajudam o CPF dele.</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Como comprovar renda barato (aulas 11, 15, 30, 35)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Documento</th><th>Como usar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>IR</strong></td><td>"Documento master / padrão ouro". Se tem IR menor que o contracheque, use o maior valor (aula 08).</td></tr>
+        <tr><td><strong>Extrato (3 meses)</strong></td><td>Para o rating entra a média entre comprovante e movimentação. Atenção: algumas aulas dizem que extrato sozinho deixou de ser aceito (aula 13).</td></tr>
+        <tr><td><strong>DECORE</strong></td><td>Declaração de faturamento assinada pelo contador; ele não precisa transmitir à Receita. Banco aceita (profissional com conselho regional). Caixa aceita melhor.</td></tr>
+        <tr><td><strong>Pró-labore</strong></td><td>Retirada mensal programada a título de salário.</td></tr>
+        <tr><td><strong>Retirada de dividendos (últimos 3 meses)</strong></td><td>Comprovante mais barato para quem nunca declarou IR, e <strong>isento de imposto</strong> (aula 30). Peça ao contador "um comprovante de renda barato em que eu não pague imposto".</td></tr>
+        <tr><td><strong>Dividendos + pró-labore</strong></td><td>Soma-se: pró-labore R$ 20 mil + R$ 600 mil/ano de dividendos (R$ 50 mil/mês) = R$ 70 mil de renda (aula 15).</td></tr>
+      </tbody></table></div>
+    <div class="callout yellow"><div class="callout-title">Aviso do instrutor sobre "IR inflado" (aula 11)</div><p>Contador que faz o IR com renda maior (ex.: R$ 20 mil → R$ 240 mil/ano) pode criar problema no longo prazo. Recomende declaração real e use o rating como complemento. Não invente nem altere documentos: "a gente não vai colocar nós em risco" (aula 07).</p></div>
+    <p style="font-size:.85rem;color:var(--fg3)">Conflito entre aulas: a capacidade de pagamento é 50% da renda presumida, mas o teto de renda comprometida com dívidas citado é 30–35% (aula 02, Marcel com 37% = capacidade zerada). Explique as duas coisas separadas. Regra prática de financiamento: ~R$ 1 mil de parcela para cada R$ 100 mil financiados (aula 11).</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Dívidas de fornecedor, protestos e carta de anuência (aula 15)</div>
+    <ul>
+      <li>Priorize as dívidas que <strong>não vão para o CPF</strong> (a Sicredi, por exemplo, coloca o CPF como fiador e negativa os dois).</li>
+      <li><strong>Carta de anuência:</strong> o credor é obrigado por lei a dar quando o acordo é pago. Se são vários títulos, <strong>junte tudo numa dívida única</strong> e faça um acordo só, senão a anuência só sai quando acaba tudo. O banco costuma juntar cartão + cheque especial + empréstimo num acordo.</li>
+      <li>Pagou o acordo, a restrição sai do birô; mas o histórico no Bacen (se apontado) segue.</li>
+    </ul>
+  </div>
+</section>
+<!-- ═══════════════ TAB: SISTEMA DE CONSULTAS ═══════════════ -->
+<section id="tab-consultas" class="section">
+  <h2 class="section-title">Sistema de Consultas (Concentre)</h2>
+  <p class="section-desc">A ferramenta que gera o relatório mostrado ao cliente: telas, custos, ordem de leitura, como vender o raio-X e por que nunca prometer "antes e depois".</p>
+
+  <div class="subsection">
+    <div class="subsection-label">Os dois sistemas e os custos</div>
+    <div class="card-grid">
+      <div class="card-sm"><h4>Concentre antiga (KSI)</h4><p style="font-size:.88rem">Continua ativa e nada muda. Quem quiser usa só ela.</p></div>
+      <div class="card-sm"><h4>Concentre nova (API)</h4><p style="font-size:.88rem">Mesma consulta, <strong>layout com mais páginas</strong>, mesmo preço. Exige novo cadastro (nome + e-mail + senha ao WhatsApp da Concentre). <strong>O saldo não é compartilhado</strong> entre as duas.</p></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Item</th><th>Valor citado (aula 10)</th></tr></thead>
+      <tbody>
+        <tr><td>Recarga promocional (lançamento)</td><td>Colocar R$ 500 → receber R$ 650 de saldo</td></tr>
+        <tr><td>Custo da consulta para o consultor</td><td>~R$ 36 com recarga de R$ 500; ~R$ 30 se recarregar R$ 1.000 de uma vez</td></tr>
+        <tr><td>Preço de venda sugerido (consulta pessoal)</td><td>R$ 100 a R$ 200 ("quando vem 20 folhas o cliente acha barato")</td></tr>
+        <tr><td>Consulta simples (SPC/Serasa/Boa Vista/protesto)</td><td>R$ 49 de venda</td></tr>
+        <tr><td>Consulta completa / PF avançada</td><td>R$ 99 em promoção · R$ 179 normal</td></tr>
+        <tr><td>CADIN (impostos federais/municipais)</td><td>Ainda não vem; seria adicional de ~R$ 5; útil para PRONAMP</td></tr>
+        <tr><td>Saldo mínimo recomendado</td><td>Recarregar no mínimo <strong>R$ 100</strong> para ter crédito na hora quando estiver conversando com alguém</td></tr>
+        <tr><td>Recarga automática</td><td>Disponível após o cadastro</td></tr>
+      </tbody></table></div>
+    <p style="font-size:.85rem;color:var(--fg3)">Volumes citados: 30 mil consultas em 30 dias na rede, 12 mil só do instrutor. Preços da aula 10; confirme valores atuais com a plataforma. Aula 35: o cliente chegou a pagar R$ 90 pelo raio-X com uma consultora.</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">A tela da nova consulta, na ordem de leitura</div>
+    <ol class="steps">
+      <li><strong>Classificação (AAA a C−)</strong> com a escala de referência. Técnica de ancoragem: "você está em B, deveria estar em AAA".</li>
+      <li><strong>Sem score, de propósito.</strong> "O score a pessoa vê de graça; como vender R$ 100 de consulta com dado que ela vê grátis? Prefiro mostrar o rating."</li>
+      <li><strong>Renda presumida, capacidade de pagamento, comprometimento</strong> e "crédito a liberar" (quem decide é o banco).</li>
+      <li><strong>Cadastro:</strong> vários telefones, e-mails, endereços; ações judiciais (Jus Brasil, adicional): "30 processos, dá para falar a língua dele".</li>
+      <li><strong>Birôs desmembrados:</strong> Serasa, SPC, Boa Vista, protesto, cheques sem fundo. O COD espelha o Serasa.</li>
+      <li><strong>Protesto:</strong> mostra se existe (não mostra cartório). Agora incluído no preço.</li>
+      <li><strong>Histórico de consultas</strong> por mês.</li>
+      <li><strong>Bacen:</strong> nº de relacionamentos, limite, carteira de crédito, dívida não paga, prejuízo, total; detalhado por modalidade (cheque especial = "adiantamento a depositantes").</li>
+      <li><strong>Síntese final:</strong> "limpo no birô, limpo no Bacen, quer crédito → rating".</li>
+      <li><strong>Roda do Crédito:</strong> 4 pilares em sequência (Bacen → classificação → rating → crédito liberado). O pilar que trava fica <strong>amarelo</strong> e mostra o serviço que o cliente precisa.</li>
+    </ol>
+    <div class="callout yellow"><div class="callout-title">Limitações para avisar o cliente</div><p>O nome do banco do vencido <strong>não aparece</strong> na consulta (LGPD): peça o SCR pelo gov.br. A consulta mostra só os últimos ~90 dias de Bacen. Falha de API pode esconder protesto: peça ao suporte para regerar. Quando aparecem CNPJs ligados ao CPF, é oportunidade: "já vamos consultar seu CNPJ também".</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Regra: consulta antes de qualquer proposta (aula 10)</div>
+    <div class="callout red"><div class="callout-title">"Nenhuma proposta sem diagnóstico. A consulta sempre em primeiro lugar."</div><p>Caso: cliente economizou R$ 99 e não fez o diagnóstico; esperou a visita do gerente por 1 mês; o gerente chegou e havia vencido no SCR. Perdeu ≥ 30 dias (próxima atualização do Bacen), às vezes 60. <strong>"Por R$ 100 você perde um mês de liberação."</strong> "Quem não consegue vender um raio-X de R$ 99 vai ter problema para vender rating de R$ 2–3 mil."</p></div>
+    <ul>
+      <li>Faça o cliente <strong>desistir da simples</strong> e comprar a completa: a diferença de R$ 30 para R$ 100 parece grande, mas a de 20 folhas vale.</li>
+      <li>Ofereça a consulta a <strong>amigos e parentes</strong>: "se você não oferece, eles vão a outro especialista."</li>
+      <li>O raio-X é a <strong>porta de entrada</strong> para rating, Bacen, superendividamento.</li>
+      <li>Não peça consulta "pós-rating" para mostrar a letra: fica muito recente, e o cliente se ancora na letra.</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Como ler a consulta (aula 12)</div>
+    <div class="card-grid">
+      <div class="card-sm"><h4>Se a letra é C−</h4><p style="font-size:.88rem">Ir direto às pendências financeiras nos birôs e mandar negociar. Caso Juliana: 4 restrições no Nubank. Conselho: <strong>parcelar com o Nubank e entrar com o rating em paralelo</strong>. Quando o cliente assina o aceite, o credor tem <strong>5 dias para dar baixa</strong>; o rating leva ~35 dias, então "você ganhou tempo".</p></div>
+      <div class="card-sm"><h4>Se a letra é AA/AAA</h4><p style="font-size:.88rem">Ir a "aprovação recomendada", renda presumida, capacidade, limite sugerido, parte cadastral, birôs, Bacen. O problema é informação ou capacidade. "Quando você tem esse cliente não tem outro serviço para vender, é o rating."</p></div>
+      <div class="card-sm"><h4>Empresa BBB com sócio AA</h4><p style="font-size:.88rem">"Empresa normalmente fica acima de A; se está BBB, algo está errado": <strong>sempre peça a consulta do CPF do sócio</strong>. CPF bom → CNPJ bom; CPF ruim → CNPJ ruim. Venda dupla: rating PF + dossiê da PJ.</p></div>
+      <div class="card-sm"><h4>"Recomendado" ≠ liberado</h4><p style="font-size:.88rem">Analogia da prova do Detran: 6,75 é "razoável", mas 0,25 abaixo e não passa. "Recomendado" só significa que passou o corte do produto. Dívida pequena (R$ 100) não paga = "não gosta de pagar".</p></div>
+    </div>
+    <div class="case"><div class="case-title">Caso AA com renda de R$ 6.600 (aula 12)</div><div class="case-body">Dono de empresa: renda presumida R$ 6.600 → capacidade R$ 3.300 → limite sugerido R$ 2.000. 4 telefones, 2 e-mails, 2 endereços. Bacen: R$ 4.200 de crédito tomado, R$ 35 mil de limite livre, R$ 9.900 de cheque especial, R$ 18 mil de cartão. Queria capital de giro para um novo empreendimento. Diagnóstico: "o banco não entende o perfil, o que ele pode pagar nem qual crédito ele quer."</div></div>
+    <div class="case"><div class="case-title">Caso "ex-gerente de banco" (aula 12)</div><div class="case-body">Ex-gerente do Mercantil que não acreditava no rating. Depois do serviço: <strong>crédito aprovado de R$ 400 mil</strong>. Ex-gerente vira fonte de indicação.</div></div>
+    <ul>
+      <li><strong>Capital social como renda:</strong> às vezes a renda presumida da empresa é o valor do contrato social (contador lançou capital social como faturamento). O rating corrige com a declaração do último ano ou extratos de 3 meses.</li>
+      <li><strong>Telefone/endereço antigo:</strong> a atualização não apaga necessariamente os antigos; o novo principal é declarado e espelhado em todos.</li>
+      <li><strong>LTV:</strong> a vida muda em 5 anos; o cliente pode precisar de novo em 6–12 meses (renda subiu, quitou operação).</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Por que NÃO existe "antes e depois" (aulas 07, 10, 12)</div>
+    <div class="card" style="border-color:var(--warn)">
+      <ul>
+        <li><strong>Cada órgão tem seu calendário.</strong> ~15 dias depois, o Serasa já exclui consultas e o score sobe um pouco; mas a <strong>renda só vira quando o Bacen vira o mês de referência (dia 20)</strong>. Terminou dia 4/ago → renda só atualiza na virada de agosto. Se finalizou dia 30/jul, a referência é agosto (o que vira depois do dia 20 pertence ao mês seguinte).</li>
+        <li><strong>Os bancos enxergam antes do Bacen:</strong> os birôs informam os bancos. O cliente pode ter pré-aprovação em 15–30 dias mesmo com a consulta "velha" aparecendo.</li>
+        <li><strong>Quem decide a letra, a renda presumida e o faturamento são os órgãos.</strong> Trabalhe com o que está no seu controle.</li>
+        <li><strong>Proibido prometer</strong> "vou te botar de BBB para AA, renda de R$ 3 mil para R$ 22 mil". Se você vende a letra, o cliente só considera feito quando virar AAA. "Nosso objetivo não é letra, é crédito."</li>
+        <li>Quem vende "antes e depois" edita PDF (90% do mercado). Aula 12: um aluno perdeu R$ 50 mil em golpe de empresa de PDF falso. "Em 1–2 anos esse pessoal não está mais no mercado."</li>
+        <li><strong>Cross match:</strong> os órgãos conferem informações entre si por causa de fraudes. Atualizar só um (CDL/SPC) é inútil; o rating atualiza SPC, Serasa, Boa Vista, COD e Receita juntos (aula 11).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Vender pela dor, não pela letra (aula 10)</div>
+    <div class="script-box">
+      <div class="script-line consultor"><div class="script-label">Roteiro de descoberta</div>"Por que você não está conseguindo crédito hoje? O que está tentando? Qual banco movimenta? Qual o relacionamento? Quais bancos já tentou? Vamos ver seus dados? Vou te passar orientações."</div>
+      <div class="script-line cliente"><div class="script-label">Cliente entrega a dor</div>"Faz mais de um ano que não consigo crédito, estava com nome sujo."</div>
+      <div class="script-line consultor"><div class="script-label">Consultor</div>"Só nome limpo não basta: o banco olha renda, dados, comportamento."</div>
+    </div>
+    <ul>
+      <li><strong>Fique calado e escute</strong>: "o cliente te dá a arma para fechar". Mais ouvir que falar.</li>
+      <li><strong>Condição para o rating funcionar:</strong> ~40 dias sem pedir crédito (falar já na venda), documentação fornecida pelo cliente, seguir as orientações.</li>
+      <li><strong>Evento-gatilho:</strong> lead de rating parado há uma semana fechou à vista no dia em que teve <strong>financiamento de veículo negado</strong>.</li>
+      <li>Cliente que diz "não devo nada" ao ver o diagnóstico: "Esse diagnóstico é justamente para mostrar o que você não sabe. Não é queda de braço, é nível de consciência."</li>
+    </ul>
+  </div>
+</section>
+<!-- ═══════════════ TAB: NEGÓCIO & MARKETING ═══════════════ -->
+<section id="tab-negocio" class="section">
+  <h2 class="section-title">Montar o Negócio: Operação, Equipe & Marketing</h2>
+  <p class="section-desc">Como a operação funciona por trás das calls: compliance, equipe, esteira de produtos, posicionamento, tráfego e métricas realistas de conversão.</p>
+
+  <div class="subsection">
+    <div class="subsection-label">O modelo de negócio (aulas 00, 01)</div>
+    <div class="card-grid">
+      <div class="card-sm"><h4>O que o curso entrega</h4><ul style="font-size:.88rem"><li>Sistema de consultas (o relatório)</li><li>"Escritório virtual": reuniões, contrato, carteira digital para emitir contratos e cobrar</li><li>Biblioteca com 24+ horas só de rating</li><li>Suporte para dúvidas (aula semanal com o compliance)</li></ul></div>
+      <div class="card-sm"><h4>O que é a mentoria completa</h4><ul style="font-size:.88rem"><li>Produtos: Bacen, superendividamento, consórcio</li><li>3 a 4 encontros por semana, formação "Especialista Financeiro", eventos presenciais</li><li>O curso é "boca de funil": "aqui é só para você estartar"</li></ul></div>
+      <div class="card-sm"><h4>Por que rating é bom produto</h4><ul style="font-size:.88rem"><li>"Produto sexy": todo mundo quer crédito</li><li>Público com nome limpo tem mais dinheiro e cartão</li><li>Cliente de limpa-nome "dá pós-venda por R$ 100"</li></ul></div>
+    </div>
+    <div class="callout green"><div class="callout-title">Modelo de escala citado (aula 01)</div><p>Você pode (a) fazer as atualizações você mesmo (existe aula "como fazer") ou (b) repassar ao time de compliance. Exemplo: aluno que vendeu <strong>9 ratings em um dia</strong> a ~R$ 2.000 cada, pagou R$ 300 ao compliance por cliente e escalou sem fazer o serviço braçal.</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">O time de compliance: o que faz e como se posicionar</div>
+    <ul>
+      <li><strong>Custo:</strong> R$ 350 por cliente; a partir de 10 clientes/mês cai para R$ 300 (aulas 01 e 11). A aula 07 cita R$ 300 por nome.</li>
+      <li><strong>Entrega:</strong> contata o cliente em até <strong>48 horas</strong> após o contrato; primeiro passo é a Receita Federal; envia protocolo ao cliente; cliente tem link de acompanhamento por fase. Pede documentos, ajuda a criar/recuperar conta Serasa, Boa Vista, COD, regularizar título/identidade vencida (aula 11).</li>
+      <li><strong>Posicionamento:</strong> não diga que é empresa terceirizada. Diga <strong>"o meu time de compliance vai entrar em contato com você"</strong>. Isso poupa você de pedir documentos.</li>
+      <li><strong>O compliance NÃO avisa o cliente final</strong> quando termina (aula 07): o cliente "já vê que finalizou", sai atrás de crédito e estraga. Quem comunica é você. O compliance manda ao aluno uma <strong>planilha com os clientes finalizados</strong>; você marca call individual e passa as orientações pós-rating.</li>
+      <li>O cliente recebe prints de cada etapa (Receita, etc.) + e-mail de protocolo. Respostas dos birôs levam 7 a 20 dias úteis, por isso o prazo de 45 dias.</li>
+      <li><strong>Pós-venda de aluno:</strong> toda sexta-feira mande status ao cliente ("está em tal estágio"). Gera confiança. Cliente ansioso manda mensagem de manhã e à tarde: "é assim mesmo".</li>
+      <li>O consultor <strong>não controla a renda que entra no sistema</strong>: "nós subimos extrato/IR, quem decide é o banco de dados". Só consulte a renda depois de 45 dias + atualização do banco do cliente.</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Contrato e responsabilidade do cliente (aulas 03, 07, 12)</div>
+    <div class="card">
+      <ul>
+        <li><strong>Cláusula de responsabilidade:</strong> o cliente assina que não vai negativar o nome nem pedir crédito/consultas durante o processo. Se reclamar, use o contrato como prova.</li>
+        <li><strong>Cláusula de interrupção por inadimplência:</strong> para quem parcela no boleto, se ficar inadimplente o serviço pode ser interrompido.</li>
+        <li><strong>Avise antes, não depois:</strong> diga na venda que são 45 dias sem pedir crédito, senão ele reclama que "você não avisou".</li>
+        <li><strong>Blindagem (aula 07):</strong> se o cliente tentou crédito durante o processo, jogue a responsabilidade nele: "Eu te passei as orientações. Hoje tem 25 dias e você me diz que não aprovou? Você está atrapalhando o serviço que eu faço." Sem "passar pano", senão "ele monta em cima de você". Mas seja maleável: oriente a pagar a pendência e refazer.</li>
+        <li><strong>Casos de cliente que se sujou no meio:</strong> faturamento de R$ 4 milhões deixou entrar restrição de conta de energia no fim; protesto de R$ 30 milhões limpo pelo compliance e depois nova restrição. "Serviço entregue ≠ resultado se ele se suja no caminho."</li>
+        <li><strong>Cobrança 50/50:</strong> consultor que cobra 50% na assinatura e 50% no final: o "final" só é depois da orientação pós-rating. O instrutor sugere combinar de cobrar a segunda parte já na entrega das orientações.</li>
+        <li>Contrato e boleto saem no <strong>nome da empresa do consultor</strong> (com CNPJ). Quem liga para entregar contrato + portal é a equipe (secretária), não o consultor. Ao encerrar a ligação o cliente recebe uma pesquisa de satisfação.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Métricas realistas e a esteira de produtos (aulas 11, 12)</div>
+    <div class="card-grid">
+      <div class="card-sm"><h4>Conversão</h4><p style="font-size:.88rem">"De 10 atendimentos, 1–2 fecham é normal; 20–30% é excelente; acima disso 'tá passando da mão'." Alguns clientes você "demite": dá orientação e manda voltar. Um consultor vendeu 3–4 ratings em um dia, todos por videochamada.</p></div>
+      <div class="card-sm"><h4>Metas citadas</h4><p style="font-size:.88rem">"130 clientes em 3 meses = 1,1 venda por dia." Um aluno chegou perto de R$ 100 mil em 20–25 dias. Outro fez R$ 7 mil de consultas em um dia orgânico (7 consultas, 4 ratings). Números do instrutor; dependem de lead qualificado.</p></div>
+      <div class="card-sm"><h4>Esteira de produtos</h4><p style="font-size:.88rem">Consulta → rating → Bacen → superendividamento → linha de crédito/PRONAMP → consórcio e alavancagem patrimonial. "Eu não atendo mais cliente final, mas vendo no automático."</p></div>
+    </div>
+    <div class="callout blue"><div class="callout-title">Venda dupla</div><p>PF + PJ: "dois negócios com um cliente só: você resolveu o ganha-pão e a casa do cara." Esposa e sócios também são venda adicional (rating individual de cada CPF).</p></div>
+    <div class="callout yellow"><div class="callout-title">Limpa-nome: regras de negócio (aula 07)</div><p>Venda como <strong>liminar que pode voltar em 1–2 meses</strong>, nunca como solução imediata. Só execute <strong>depois que o cliente terminar de pagar todas as parcelas</strong> (mesmo em 2–10×). Cobre reprotocolo de R$ 247; a associação cobra ~R$ 70 (margem ~R$ 150+). Nunca venda junto com rating. Cliente com liminar: não pegue rating, estude superendividamento (aula 12). Aula 10: projetos como Desenrola/Move Brasil/limpa-nome por associação "estavam parados, não compensam"; limpa-nome não serve para quem quer BNDES.</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Contratar e crescer (aula 11)</div>
+    <ul>
+      <li><strong>Primeiro contratado = secretária/administrativo</strong> (R$ 2.000/mês ≈ R$ 10/hora), não vendedor. "Sua hora vale mais de R$ 1.000." Quem faz contrato, cobrança, pós-venda e pedido de documento está vendendo a hora por R$ 10.</li>
+      <li>Só contrate vendedor quando já fizer R$ 70–80 mil líquidos; closer só faz o fechamento. "Se eu boto alguém para vender igual a mim, ninguém vende igual a mim."</li>
+      <li><strong>Descapitalizado:</strong> use orgânico, família, amigos, ex-clientes, imobiliárias, corretores, contadores e promotores de crédito (parceria por indicação rende mais que porta em porta). Troque o nome do Instagram para "especialista financeiro". O primeiro rating "destrava a chave": 1 parcela de R$ 1.000 já paga R$ 50/dia de tráfego. Alguns alunos fecham mais de R$ 50 mil sem tráfego pago.</li>
+      <li><strong>Corretor, advogado, contador:</strong> viram especialista financeiro com o raio-X e recebem adiantado (advogado só recebe em 2–5 meses; raio-X/rating recebe antes).</li>
+      <li><strong>Padronize o atendimento</strong> (15–20 min, relógio) se tem escala digital; consultoria personalizada longa (1–2h) só com ticket alto (aluno cobra R$ 10 mil e fecha 8 de cada 10).</li>
+      <li><strong>Mentalidade:</strong> "o primeiro produto que o cliente compra é você"; "disciplina > talento"; "paciência e persistência".</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Marketing e posicionamento (aulas 07, 10, 11)</div>
+    <div class="card-grid">
+      <div class="card-sm" style="border-color:var(--accent)"><h4 style="color:var(--accent)">Fazer</h4>
+        <ul style="font-size:.88rem">
+          <li><strong>Perfil pessoal profissionalizado</strong> (as pessoas compram de pessoas), não só o da empresa</li>
+          <li>Foto profissional de especialista: "qual a profissão dessa pessoa?"</li>
+          <li>Bio com anos de mercado, nº de análises/clientes, créditos liberados</li>
+          <li><strong>Fixar 3 posts de autoridade</strong> (evento, família, depoimento)</li>
+          <li>Conteúdo humano: família, viagem, dia a dia</li>
+          <li><strong>Caixinha de perguntas</strong> (meta de 5; 2–3 por dia por 60 dias)</li>
+          <li>Microfone de lapela (R$ 50–60) e CapCut para ruído</li>
+          <li><strong>Link profissional na bio</strong> (ferramenta tipo Seleto Bio, R$ 197): botões de consulta, evento, suporte, "falar com consultores"</li>
+          <li>Texto: "adquira sua consulta, receba em até 48 horas"</li>
+          <li><strong>Gravar criativos em lote</strong> (aula 10: 60 criativos em um dia)</li>
+          <li><strong>Conteúdo diário de PRONAMP</strong> (nicho de empresário; um vídeo de aluno bateu 230 mil views)</li>
+          <li>Print de resultado e depoimento do cliente (com autorização)</li>
+        </ul></div>
+      <div class="card-sm" style="border-color:var(--danger)"><h4 style="color:var(--danger)">Não fazer</h4>
+        <ul style="font-size:.88rem">
+          <li><strong>Link direto de WhatsApp ou checkout no perfil</strong>: o Instagram marca como "golpe em potencial", perde lead e arrisca banimento</li>
+          <li><strong>Sorteios</strong> (denúncia derruba o perfil)</li>
+          <li>Prometer letra, "antes e depois" ou valores de limite</li>
+          <li>Anúncio só falando de "nome sujo" (traz lead mau pagador). Fale com "nome limpo que não consegue crédito"</li>
+          <li>Anúncio com celebridade: "o primeiro pago empata 0×0" e traz muito nome sujo (aula 17). Envie ao Meta o evento de <strong>lead qualificado</strong></li>
+          <li>Inventar notícia ou matéria. Matérias em portais só com fatos reais</li>
+        </ul></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Canal / tática</th><th>Resultado ou dado citado</th></tr></thead>
+      <tbody>
+        <tr><td>Tráfego pago de venda de consulta (24h)</td><td>Cliente compra assistindo ao vídeo e recebe a consulta em até <strong>48 horas</strong>; entra automático no WhatsApp do time (aula 07)</td></tr>
+        <tr><td>Impulsionar vídeo (R$ 150, cidades vizinhas)</td><td>"Patrocinado para WhatsApp" gerou &gt; 50 leads/dia no 3º dia: 4 diagnósticos, 2 prontos para rating (aula 10)</td></tr>
+        <tr><td>Live no TikTok (1 hora)</td><td>~10 consultas pagas (R$ 660 de entrada), 2 ratings, &gt; R$ 3 mil (&gt; R$ 5 mil considerando pendentes). "A primeira live é ruim, a segunda é ruim, a terceira é ruim" (aula 11)</td></tr>
+        <tr><td>Post na dor do momento (Move Brasil)</td><td>600 mil tentaram, ~9 mil aprovadas (1,6%): "crédito é construção, não sorte". Rendeu 5 fechamentos em um dia (aula 11)</td></tr>
+        <tr><td>Automação de WhatsApp (mini-chat R$ 70–90)</td><td>Só quando entrar muito lead. Antes disso "o problema não é tempo, é prioridade" (aula 10)</td></tr>
+        <tr><td>Evento presencial (ingresso R$ 297)</td><td>Alunos dizem que "vira a chave" em vendas (aula 07)</td></tr>
+        <tr><td>Placa/prova de faturamento, certificados, depoimentos</td><td>Autoridade: "o Google responde quem é você; o cliente pensa 'será que é golpe?'" (aula 11)</td></tr>
+      </tbody></table></div>
+    <div class="callout yellow"><div class="callout-title">Matérias em portais (aula 11)</div><p>O instrutor oferece aos alunos um pacote de 45 portais por R$ 600 (exemplo de chamada: "casal de empresários mineiros é homenageado em Alphaville após ajudar mais de mil pessoas"). Use só com informação verdadeira sobre você e seu trabalho; não publique números ou resultados que você não tem.</p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Roteiro do Kleber: atendimento humanizado (aula 11)</div>
+    <ol class="steps">
+      <li><strong>Primeiro contato por áudio</strong> (não textão): "Sou o Kleber, especialista financeiro, responsável por realizar seu diagnóstico. Confirma se o CPF está certo e qual o melhor horário para videochamada. Nosso atendimento é humanizado e personalizado." Poucos áudios: as pessoas escutam 2 de 10.</li>
+      <li><strong>Aquecimento (3–5 min):</strong> ocupação, motivação, cidade, família. Conecte a cidade (conte que morou em Gramado). Linguagem não verbal. Objetivo: "confirmar que a pessoa entrou na minha bolha" antes do diagnóstico.</li>
+      <li><strong>Escutar sem interromper:</strong> "Conte sua história: o que te levou a buscar o diagnóstico?" "Se precisar falar meia hora, eu escuto meia hora."</li>
+      <li><strong>Abertura:</strong> "O diagnóstico é um dos mais completos do mercado: extrai Bacen, birôs, apontamentos e instituições. A gente só lembra do borracheiro quando fura o pneu, do médico quando fica doente e do especialista financeiro quando precisa do crédito."</li>
+      <li><strong>Explicar a letra sem assustar:</strong> "BBB não está muito ruim nem muito boa, é risco moderado. Normalmente falam 'pensei que estava pior'."</li>
+      <li><strong>Leitura:</strong> renda presumida (R$ 8.750) → comprometimento → ocorrências → "você usa estes 4 telefones?" → "achamos mais uma trava: inconsistência cadastral; o rating tem 7 travas".</li>
+      <li><strong>Perguntas:</strong> "Qual a sua renda real? Declara IR? Qual banco?" Se Nubank/Inter/Mercado Pago: "esse tipo de banco é plano B; seu objetivo precisa de instituição física".</li>
+      <li><strong>"Deixar dinheiro na mesa":</strong> renda real R$ 30 mil e o sistema vê R$ 8.750 → capacidade R$ 15 mil → financiamento &gt; R$ 1 milhão.</li>
+      <li><strong>Fechar com condição:</strong> "Se eu tiver uma condição que se encaixe no seu orçamento, você adquire?" → "Tirando a questão financeira, existe outro motivo que impeça?" → "Então se o valor couber no bolso, fecha?" → "Fecho." (mata objeção falsa)</li>
+      <li><strong>Preço e contrato:</strong> passa o valor na call e no WhatsApp ao mesmo tempo; manda o card de dados, cola no contrato, assinatura digital em 2 minutos. "A parte mais fácil é o contrato; o difícil é vender."</li>
+      <li><strong>Pós:</strong> o compliance avisa que terminou → você liga e orienta: atualização cadastral com gerente, débito, CDB com liquidez diária, produto que o gerente precisa vender no mês, banco oposto, esperar ~30 dias.</li>
+    </ol>
+    <div class="callout green"><div class="callout-title">Garantia (aula 11)</div><p>"A garantia é que vou fazer o melhor trabalho para entregar o melhor resultado. O remédio certo tomado da maneira errada não funciona (buscopan de 8 em 8 horas)." Ressalvas: não atrasar conta, não consultar CPF, não pedir crédito. "Em 30–40 dias alguns já veem resultado; outros precisam de mais relacionamento." "Não prometo crédito; o serviço ajuda no processo de retomada do crédito."</p></div>
+    <div class="callout blue"><div class="callout-title">Plantar a dúvida em empresário que "não quer declarar" (aula 11)</div><p>"Eu não sou funcionário da Receita. Estou aqui para entregar informação suficiente ao sistema bancário para formar um perfil alinhado à sua realidade." Cliente com R$ 300 mil de faturamento tem "R$ 273 mil de renda subutilizada". "No dia que você precisar de uma linha maior, o banco terá informação para liberar? Sua empresa vai quebrar? É mais barato pagar a atualização hoje ou ver o sonho indo por água abaixo?" Fale e deixe o cliente responder sozinho. "Crédito é igual plano de saúde: não estou doente, mas tenho." "Se tem crédito é porque declara; se não tem é porque não declara." <strong>Não perca a venda por falta de declaração: peça ao contador enquanto o processo roda.</strong></p></div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-label">Perguntas frequentes de consultores (aulas 07, 11, 12)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Pergunta</th><th>Resposta do curso</th></tr></thead>
+      <tbody>
+        <tr><td>Quanto cobrar de rating e Bacen?</td><td>R$ 1.980 a R$ 2.500 (mercado até R$ 2.800–3.000); compliance R$ 350 (R$ 300 acima de 10/mês).</td></tr>
+        <tr><td>Posso vender rating antes de o cliente negociar a dívida?</td><td>Sim, se ele já assinou o aceite (baixa em 5 dias) e o rating leva ~35–45 dias.</td></tr>
+        <tr><td>Qual renda lançar para quem movimenta R$ 300 mil?</td><td>Pergunte qual crédito quer, quanto precisa e quanto pode declarar com segurança retirar para a PF (ex.: pedir ao contador para declarar R$ 50 mil).</td></tr>
+        <tr><td>O cliente fez 6 tentativas de crédito durante o processo.</td><td>O rating "caiu": o banco vê desespero. Use a cláusula do contrato. Envie a consulta ao suporte para olhar o protocolo (aula 12).</td></tr>
+        <tr><td>Dá para fazer rating da esposa/sócio?</td><td>Sim, é venda adicional; PJ: dossiê da empresa + CPF dos sócios.</td></tr>
+        <tr><td>Cliente com liminar de limpa-nome.</td><td>Não pegue rating: a restrição volta. Estude superendividamento.</td></tr>
+        <tr><td>Cliente com R$ 30 mil de protesto em 20 títulos.</td><td>Peça ao credor para juntar tudo numa dívida e faça um acordo só; a carta de anuência vem com o pagamento.</td></tr>
+        <tr><td>Rating de PJ junto com o de PF?</td><td>Pode fazer ao mesmo tempo se a PJ não tem restrição (aula 35).</td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+</div><!-- /content -->
+</div><!-- /layout -->
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+
+<script>
+var TABS=[['fundamentos','Fundamentos'],['travas','As 7 Travas'],['processo','O Processo'],['consultas','Sistema de Consultas'],['bancos','Bancos & Relacionamento'],['bacen','Bacen & Registrato'],['posrating','Pós-Rating'],['credito','Linhas de Crédito'],['scripts','Scripts Detalhados'],['precos','Preços & Ganhos'],['vendas','Casos & Objeções'],['negocio','Montar o Negócio']];
+function curId(){var a=document.querySelector('.section.active');return a?a.id.replace('tab-',''):'fundamentos'}
+function toggleMenu(open){document.getElementById('menu').classList.toggle('open',open);document.querySelector('.scrim').classList.toggle('show',open);document.body.style.overflow=open?'hidden':''}
+function showTab(id,skipHash){
+  var sec=document.getElementById('tab-'+id); if(!sec) id='fundamentos', sec=document.getElementById('tab-fundamentos');
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
+  document.querySelectorAll('#menu .tab-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===id)});
+  sec.classList.add('active');
+  var t=TABS.filter(function(x){return x[0]===id})[0]; if(t) document.getElementById('cur-label').textContent=t[1];
+  toggleMenu(false);
+  window.scrollTo({top:0,behavior:'auto'});
+  if(!skipHash){try{history.replaceState(null,'','#'+id)}catch(e){}}
+}
+function buildPagers(){
+  TABS.forEach(function(t,i){
+    var sec=document.getElementById('tab-'+t[0]); if(!sec) return;
+    var p=document.createElement('div'); p.className='pager';
+    var prev=TABS[i-1], next=TABS[i+1];
+    p.innerHTML=(prev?'<button onclick="showTab(\''+prev[0]+'\')"><small>← Anterior</small>'+prev[1]+'</button>':'<span class="spacer"></span>')+(next?'<button class="next" onclick="showTab(\''+next[0]+'\')"><small>Próxima →</small>'+next[1]+'</button>':'<span class="spacer"></span>');
+    sec.appendChild(p);
+  });
+}
+function toggleTheme(){
+  var r=document.documentElement,cur=r.getAttribute('data-theme'),n=(!cur||cur==='dark')?'light':'dark';
+  r.setAttribute('data-theme',n);document.querySelector('.theme-toggle').textContent=n==='light'?'☀️':'🌙';
+  try{localStorage.setItem('rb-theme',n)}catch(e){}
+}
+try{var th=localStorage.getItem('rb-theme');if(th){document.documentElement.setAttribute('data-theme',th);document.querySelector('.theme-toggle').textContent=th==='light'?'☀️':'🌙'}}catch(e){}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')toggleMenu(false)});
+window.addEventListener('hashchange',function(){showTab(location.hash.slice(1),true)});
+buildPagers();
+showTab((location.hash||'#fundamentos').slice(1),true);
+</script>
+</body>
+</html>
